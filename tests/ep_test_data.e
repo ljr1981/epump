@@ -4,6 +4,9 @@ note
 class
 	EP_TEST_DATA
 
+inherit
+	EP_ANY
+
 feature -- Access
 
 	test_pump_list: ARRAYED_LIST [EP_PUMP]

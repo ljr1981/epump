@@ -7,6 +7,9 @@ note
 class
 	EP_PUMP
 
+inherit
+	EP_ANY
+
 create
 	make,
 	make_from_delimited_string
@@ -246,10 +249,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-feature {NONE} -- Implementation: Constants
-
-	second_item_const: INTEGER = 2
 
 feature {NONE} -- Implementation: Type Anchors
 

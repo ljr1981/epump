@@ -4,6 +4,9 @@ note
 class
 	EP_EVALUATOR
 
+inherit
+	EP_ANY
+
 feature -- Access: Exhaust-based
 
 	imminent_exhaust_hazard_list (a_pumps: ARRAY [EP_PUMP]): HASH_TABLE [TUPLE [t_pump: EP_PUMP; t_code: STRING], STRING]
@@ -89,21 +92,5 @@ feature -- Access: Exhaust-based
 				end
 			end
 		end
-
-feature -- Access: Temperature-based
-
-	
-
-feature {NONE} -- Constants
-
-	Imminent_exhaust_rate_failure_threshhold: REAL = 0.5
-	Imminent_pressure_level_failure_threshhold: REAL = 6.0
-
-	Potential_exhaust_rate_failure_threshhold: REAL = 0.2
-	Potential_pressure_level_failure_threshhold: REAL = 3.5
-
-	Exhaust_rate_code: STRING = "EXHAUST_RATE"
-	Pressure_level_code: STRING = "PRESSURE_LEVEL"
-
 
 end
