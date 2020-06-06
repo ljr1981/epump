@@ -10,11 +10,13 @@
 		<setting name="total_order_on_reals" value="false"/>
 		<setting name="dead_code_removal" value="feature"/>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency support="none" use="thread"/>
 			<void_safety support="transitional" use="transitional"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
+		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
+		<library name="sqlite_ext" location="$GITHUB\sqlite_ext\sqlite_ext.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="epump" location=".\" recursive="true">
 			<file_rule>
