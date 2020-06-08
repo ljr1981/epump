@@ -12,6 +12,14 @@ note
 		
 		See the `on_prepare' below.
 		]"
+	operation: "[
+		The `on_prepare' (below) is commented out. It takes about 150 seconds (2 1/2 minutes)
+		to repopulate the data. Because of this computational expense, the code is
+		commented out so that running all tests (normally) will not take an
+		excessive amount of time. IF the data becomes corrupt or you need to
+		otherwise reset it to a baseline of test data, then uncomment the code
+		and run the test and then comment it back out afterward.
+		]"
 
 class
 	EP_DB_TEST_SET
@@ -37,15 +45,15 @@ feature {NONE} -- Prep
 			l_db: EP_DB
 		do
 			Precursor
-				-- Delete it ...
-			create l_file.make_with_name ("epump.sqlite3")
-			if l_file.exists then
-				l_file.delete
-			end
-				-- Make a new one ...
-			create l_db -- creation happens in the `default_create'.
-						-- the `make_from_scratch' in `l_db' also happens!
-			l_db.load_test_data
+--				-- Delete it ...
+--			create l_file.make_with_name ("epump.sqlite3")
+--			if l_file.exists then
+--				l_file.delete
+--			end
+--				-- Make a new one ...
+--			create l_db -- creation happens in the `default_create'.
+--						-- the `make_from_scratch' in `l_db' also happens!
+--			l_db.load_test_data
 		end
 
 feature -- Test routines
