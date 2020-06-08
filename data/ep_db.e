@@ -76,7 +76,7 @@ feature {NONE} -- Implementation: DB Recreation
 
 		end
 
-feature {TEST_SET_BRIDGE} -- Testing Ops
+feature {EP_TEST_SET_BRIDGE, TEST_SET_BRIDGE} -- Testing Ops
 
 	load_test_data (a_is_my_caller_a_test_procedure: BOOLEAN)
 			-- Load data from {EP_TEST_DATA}

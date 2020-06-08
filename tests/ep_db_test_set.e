@@ -30,6 +30,11 @@ inherit
 			on_prepare
 		end
 
+	EP_TEST_SET_BRIDGE
+		undefine
+			default_create
+		end
+
 	TEST_SET_BRIDGE
 		undefine
 			default_create
