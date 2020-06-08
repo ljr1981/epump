@@ -87,6 +87,17 @@ feature {EP_TEST_SET_BRIDGE, TEST_SET_BRIDGE} -- Testing Ops
 				Running this code takes about 150 seconds!
 				Yeah--it's not that efficient!
 				]"
+			design: "[
+				Because this code is very edge-case and time
+				expensive, I have created two hurdles to get
+				over before using it.
+				
+				1. The feature export to the bridge classes.
+				2. The require contract (below).
+				
+				So--you must deliberately handle these two
+				matters if you want to call this feature.
+				]"
 		require
 			do_not_call_me_unless: a_is_my_caller_a_test_procedure -- testing only
 		local
