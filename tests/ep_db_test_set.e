@@ -76,6 +76,35 @@ feature -- Test routines
 			create l_db
 		end
 
+	ep_db_is_pump_in_db_tests
+			--
+		local
+			l_db: EP_DB
+			l_pump: EP_PUMP
+		do
+			create l_db
+
+			create l_pump.make ("CFAMT04X", "DTLR", "iQ40")
+			assert_booleans_equal ("is_pump_in_db_real", True, l_db.is_pump_in_db (l_pump))
+
+			create l_pump.make ("BLAH", "DTLR", "iQ40")
+			assert_booleans_equal ("is_pump_in_db_blah", False, l_db.is_pump_in_db (l_pump))
+
+		end
+
+	ep_db_add_new_pump_tests
+			-- Ensure we add a new pump and silently swallow dupes.
+		local
+			l_db: EP_DB
+			l_pump: EP_PUMP
+		do
+			create l_db
+
+			create l_pump.make ("CFAMT04X", "DTLR", "iQ40")
+			l_db.add_new_pump (l_pump)
+			assert_booleans_equal ("conflict", True, l_db.last_add_new_pump_had_on_conflict)
+		end
+
 end
 
 

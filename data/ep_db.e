@@ -34,6 +34,44 @@ feature {NONE} -- Initialize
 feature -- Basic Operations
 
 	-- add a new pump
+
+	add_new_pump (a_pump: EP_PUMP)
+			-- Add a new `a_pump' to DB.
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			if is_pump_in_db (a_pump) then
+				do_nothing -- swallow it and "create silently"
+				last_add_new_pump_had_on_conflict := True
+			else
+				last_add_new_pump_had_on_conflict := False
+				l_sql := " INSERT INTO pump (tool, chamber, model, key) VALUES (" +
+							"%"" + a_pump.tool + "%"," +
+							"%"" + a_pump.chamber + "%"," +
+							"%"" + a_pump.model + "%"," +
+							"%"" + a_pump.key + "%"," + ") ON CONFLICT DO NOTHING; "
+				create l_modify.make (l_sql, database)
+				across
+					l_modify.execute_new as ic
+				loop
+					last_add_new_pump_had_on_conflict := ic.item.integer_value (column_one_const) = (True).to_integer
+				end
+			end
+		end
+
+	last_add_new_pump_had_on_conflict: BOOLEAN
+
+	add_new_pump_from_data (a_tool, a_chamber, a_model: STRING)
+			-- Add a new pump from raw data to DB.
+		require
+			not_empty: not a_tool.is_empty and then
+						not a_chamber.is_empty and then
+						not a_model.is_empty
+		do
+			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model))
+		end
+
 	-- add new pump-data for a pump
 	-- update pump information
 	-- update pump-data information
@@ -49,6 +87,29 @@ feature -- Basic Operations
 	-- import pump-data from XML
 	-- import pumps from CSV
 	-- import pump-data from CSV
+
+feature -- Helpers
+
+	is_pump_in_db (a_pump: EP_PUMP): BOOLEAN
+			-- Is `a_pump' already in the DB?
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_sql := "SELECT COUNT(*) FROM pump WHERE key='" + a_pump.key + "';"
+			create l_modify.make (l_sql, database)
+			across
+				l_modify.execute_new as ic
+			loop
+				Result := ic.item.integer_value (column_one_const) = (True).to_integer
+			end
+		end
+
+	column_one_const: NATURAL_32 = 1
+
+feature -- Constants: Helpers
+
+	sql_select: SLE_READ once create Result end
 
 feature -- Access
 
