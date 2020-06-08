@@ -36,6 +36,8 @@ feature -- Access
 	factory: SLE_FACTORY
 			-- A `factory' for doing DB things.
 
+feature -- Constants
+
 	db_file_name: STRING = "epump.sqlite3"
 			-- What to call the DB for this app.
 
