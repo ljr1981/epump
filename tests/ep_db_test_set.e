@@ -30,6 +30,11 @@ inherit
 			on_prepare
 		end
 
+	TEST_SET_BRIDGE
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Prep
 
 	on_prepare

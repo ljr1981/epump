@@ -11,6 +11,13 @@ feature {NONE} -- Initialize
 
 	default_create
 			--<Precursor>
+		note
+			design: "[
+				Use case: Erase the epump.sqlite3 DB file from the disk
+				and this creation routine will not only create a new DB
+				file, but will populate it with the appropriate tables.
+				Note that the tables will be empty. It will not make data.
+				]"
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
@@ -69,10 +76,15 @@ feature {NONE} -- Implementation: DB Recreation
 
 		end
 
-feature -- Testing Ops
+feature {TEST_SET_BRIDGE} -- Testing Ops
 
 	load_test_data (a_is_my_caller_a_test_procedure: BOOLEAN)
 			-- Load data from {EP_TEST_DATA}
+		note
+			warning: "[
+				Running this code takes about 150 seconds!
+				Yeah--it's not that efficient!
+				]"
 		require
 			do_not_call_me_unless: a_is_my_caller_a_test_procedure -- testing only
 		local
