@@ -31,6 +31,25 @@ feature {NONE} -- Initialize
 			end
 		end
 
+feature -- Basic Operations
+
+	-- add a new pump
+	-- add new pump-data for a pump
+	-- update pump information
+	-- update pump-data information
+	-- delete a pump and it's pump-data
+
+	-- export pumps and pump-date to XML (standard XML file)
+	-- export pumps and pump-date to CSV (standard comma-separated-value file)
+	-- export pumps and pump-date to XLM (Excel spreadsheet)
+	-- export pumps and pump-date to HTML (report with SVG graphics)
+	-- export pumps and pump-date to SVG (graphical representation)
+
+	-- import pumps from XML
+	-- import pump-data from XML
+	-- import pumps from CSV
+	-- import pump-data from CSV
+
 feature -- Access
 
 	factory: SLE_FACTORY
