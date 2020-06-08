@@ -52,8 +52,8 @@ feature {NONE} -- Prep
 --			end
 --				-- Make a new one ...
 --			create l_db -- creation happens in the `default_create'.
---						-- the `make_from_scratch' in `l_db' also happens!
---			l_db.load_test_data
+--						-- the `make_empty_from_scratch' in `l_db' also happens!
+--			l_db.load_test_data (True)
 		end
 
 feature -- Test routines

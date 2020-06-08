@@ -20,7 +20,7 @@ feature {NONE} -- Initialize
 
 			create l_file.make_with_name (Db_file_name)
 			if l_file.count = 0 then -- is empty (fresh creation)
-				make_from_scratch
+				make_empty_from_scratch
 			end
 		end
 
@@ -34,8 +34,8 @@ feature -- Access
 
 feature {NONE} -- Implementation: DB Recreation
 
-	make_from_scratch
-			-- Create a new DB from scratch.
+	make_empty_from_scratch
+			-- Create an empty new DB from scratch.
 		require
 			database.is_accessible and then database.is_writable
 		local
@@ -71,8 +71,10 @@ feature {NONE} -- Implementation: DB Recreation
 
 feature -- Testing Ops
 
-	load_test_data
-			--
+	load_test_data (a_is_my_caller_a_test_procedure: BOOLEAN)
+			-- Load data from {EP_TEST_DATA}
+		require
+			do_not_call_me_unless: a_is_my_caller_a_test_procedure -- testing only
 		local
 			l_data: EP_TEST_DATA
 			l_modify: SQLITE_MODIFY_STATEMENT
