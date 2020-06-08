@@ -51,7 +51,7 @@ feature {NONE} -- Prep
 				from scratch each time the test is run.
 				]"
 		local
-			l_file: PLAIN_TEXT_FILE
+--			l_file: PLAIN_TEXT_FILE
 			l_db: EP_DB
 		do
 			Precursor
@@ -114,7 +114,7 @@ feature -- Test routines
 
 			create l_pump.make ("tool", "chamber", "model")
 			l_db.add_new_pump (l_pump, agent do_nothing)
-			l_db.delete_pump_with_data (l_pump)
+			l_db.delete_pump_with_data (l_pump, agent do_nothing)
 		end
 
 end

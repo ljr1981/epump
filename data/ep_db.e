@@ -26,7 +26,7 @@ feature {NONE} -- Initialize
 			database.do_nothing -- create fresh, if needed
 
 			create l_file.make_with_name (Db_file_name)
-			if l_file.count = 0 then -- is empty (fresh creation)
+			if l_file.is_empty then
 				make_empty_from_scratch
 			end
 		end
@@ -121,7 +121,7 @@ feature -- Basic Operations
 	-- update pump-data information
 	-- delete a pump and it's pump-data
 
-	delete_pump_with_data (a_pump: EP_PUMP)
+	delete_pump_with_data (a_pump: EP_PUMP; a_update_agent: PROCEDURE)
 			--
 		require
 			has_pump: is_pump_in_db (a_pump)
