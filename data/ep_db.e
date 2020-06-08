@@ -50,8 +50,9 @@ feature -- Basic Operations
 							"%"" + a_pump.tool + "%"," +
 							"%"" + a_pump.chamber + "%"," +
 							"%"" + a_pump.model + "%"," +
-							"%"" + a_pump.key + "%"," + ") ON CONFLICT DO NOTHING; "
+							"%"" + a_pump.key + "%") ; "
 				create l_modify.make (l_sql, database)
+				check compiled: l_modify.is_compiled end
 				across
 					l_modify.execute_new as ic
 				loop
@@ -77,6 +78,53 @@ feature -- Basic Operations
 	-- update pump-data information
 	-- delete a pump and it's pump-data
 
+	delete_pump_with_data (a_pump: EP_PUMP)
+			--
+		require
+			has_pump: is_pump_in_db (a_pump)
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+			l_pk: INTEGER
+			l_fk_list: ARRAYED_LIST [INTEGER]
+		do
+			l_pk := pump_pk (a_pump)
+			check has_pump: l_pk > 0 end
+			if l_pk > 0 then
+					-- locate the pump-data by `l_pk' and delete it
+				l_sql := " DELETE FROM pump_data WHERE pump_fk IN (SELECT pk FROM pump WHERE pk = " + l_pk.out + ") ;"
+				create l_modify.make (l_sql, database)
+				check compiled: l_modify.is_compiled end
+				l_modify.execute
+					-- ensure it's gone
+				check data_gone: not pump_has_data (a_pump) end
+
+					-- locate the pump and delete it
+				l_sql := " DELETE FROM pump WHERE pk = " + l_pk.out + " ;"
+				create l_modify.make (l_sql, database)
+				check compiled: l_modify.is_compiled end
+				l_modify.execute
+			end
+		ensure
+			pump_deleted: not is_pump_in_db (a_pump) -- ensure it's gone
+		end
+
+	pump_pk (a_pump: EP_PUMP): INTEGER
+			-- What is the PK for `a_pump'?
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_sql := " SELECT pk FROM pump WHERE key= '" + a_pump.key + "' ;"
+			create l_modify.make (l_sql, database)
+			check compiled: l_modify.is_compiled end
+			across
+				l_modify.execute_new as ic
+			loop
+				Result := ic.item.integer_value (column_one_const)
+			end
+		end
+
 	-- export pumps and pump-date to XML (standard XML file)
 	-- export pumps and pump-date to CSV (standard comma-separated-value file)
 	-- export pumps and pump-date to XLM (Excel spreadsheet)
@@ -98,11 +146,32 @@ feature -- Helpers
 		do
 			l_sql := "SELECT COUNT(*) FROM pump WHERE key='" + a_pump.key + "';"
 			create l_modify.make (l_sql, database)
+			check compiled: l_modify.is_compiled end
 			across
 				l_modify.execute_new as ic
 			loop
 				Result := ic.item.integer_value (column_one_const) = (True).to_integer
 			end
+		end
+
+	pump_has_data (a_pump: EP_PUMP): BOOLEAN
+			-- Does `a_pump' have data in pump_data?
+		require
+			has_pump: is_pump_in_db (a_pump)
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_sql := " SELECT COUNT(*) FROM pump_data WHERE pump_fk = " + pump_pk (a_pump).out + " ;"
+			create l_modify.make (l_sql, database)
+			check compiled: l_modify.is_compiled end
+			across
+				l_modify.execute_new as ic
+			loop
+				Result := ic.item.integer_value (column_one_const) > 0
+			end
+		ensure
+			still_has_pump: is_pump_in_db (a_pump)
 		end
 
 	column_one_const: NATURAL_32 = 1

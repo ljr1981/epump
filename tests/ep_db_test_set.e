@@ -105,6 +105,19 @@ feature -- Test routines
 			assert_booleans_equal ("conflict", True, l_db.last_add_new_pump_had_on_conflict)
 		end
 
+	ep_db_delete_pump_with_data_tests
+			-- Ensure an inserted pump is successfully deleted.
+		local
+			l_db: EP_DB
+			l_pump: EP_PUMP
+		do
+			create l_db
+
+			create l_pump.make ("tool", "chamber", "model")
+			l_db.add_new_pump (l_pump)
+			l_db.delete_pump_with_data (l_pump)
+		end
+
 end
 
 
