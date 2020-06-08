@@ -254,6 +254,7 @@ feature {NONE} -- Implementation: Type Anchors
 
 	data_type_anchor: detachable HASH_TABLE [TUPLE [t_date: DATE; t_value: REAL], STRING]
 			-- Type anchor for `exhaust_data' and `temperature_data'.
+			-- The STRING key is YYYYMMDD
 
 invariant
 	has_key: not tool.is_empty and then

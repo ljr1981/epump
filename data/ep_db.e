@@ -35,7 +35,7 @@ feature -- Basic Operations
 
 	-- add a new pump
 
-	add_new_pump (a_pump: EP_PUMP)
+	add_new_pump (a_pump: EP_PUMP; a_update_agent: PROCEDURE)
 			-- Add a new `a_pump' to DB.
 		local
 			l_sql: STRING
@@ -43,9 +43,7 @@ feature -- Basic Operations
 		do
 			if is_pump_in_db (a_pump) then
 				do_nothing -- swallow it and "create silently"
-				last_add_new_pump_had_on_conflict := True
 			else
-				last_add_new_pump_had_on_conflict := False
 				l_sql := " INSERT INTO pump (tool, chamber, model, key) VALUES (" +
 							"%"" + a_pump.tool + "%"," +
 							"%"" + a_pump.chamber + "%"," +
@@ -53,27 +51,72 @@ feature -- Basic Operations
 							"%"" + a_pump.key + "%") ; "
 				create l_modify.make (l_sql, database)
 				check compiled: l_modify.is_compiled end
-				across
-					l_modify.execute_new as ic
-				loop
-					last_add_new_pump_had_on_conflict := ic.item.integer_value (column_one_const) = (True).to_integer
-				end
+				l_modify.execute
 			end
 		end
 
-	last_add_new_pump_had_on_conflict: BOOLEAN
-
-	add_new_pump_from_data (a_tool, a_chamber, a_model: STRING)
+	add_new_pump_from_raw (a_tool, a_chamber, a_model: STRING; a_update_agent: PROCEDURE)
 			-- Add a new pump from raw data to DB.
 		require
 			not_empty: not a_tool.is_empty and then
 						not a_chamber.is_empty and then
 						not a_model.is_empty
 		do
-			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model))
+			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model), a_update_agent)
 		end
 
 	-- add new pump-data for a pump
+
+	add_new_pump_data (a_data: ARRAY [EP_PUMP]; a_update_agent: PROCEDURE)
+			-- Add a new pump_data from a_data list of Pumps.
+		do
+			across
+				a_data as ic_data
+			loop
+				add_new_pump_datum (ic_data.item, a_update_agent)
+			end
+		end
+
+	add_new_pump_datum (a_pump: EP_PUMP; a_update_agent: PROCEDURE)
+			-- Add a single datum from `a_pump'.
+		local
+			l_pk: INTEGER
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_pk := pump_pk (a_pump)
+			l_sql := " INSERT INTO pump_data (pump_fk, value_date, value, type) VALUES (" +
+						"%"<<PUMP_FK>>%"," +
+						"%"<<VALUE_DATE>>%"," +
+						"%"<<VALUE>>%"," +
+						"%"<<TYPE>>%" ) ; "
+
+			across
+				a_pump.exhaust_data as ic_exhaust
+			loop
+				check attached l_sql as al_sql then
+					al_sql.replace_substring_all ("<<PUMP_FK>>", l_pk.out)
+					al_sql.replace_substring_all ("<<VALUE_DATE>>", ic_exhaust.item.t_date.out)
+					al_sql.replace_substring_all ("<<VALUE>>", ic_exhaust.item.t_value.out)
+					al_sql.replace_substring_all ("<<TYPE>>", "EXHAUST")
+					create l_modify.make (al_sql, database)
+					l_modify.execute
+				end
+			end
+			across
+				a_pump.temperature_data as ic_temperature
+			loop
+				check attached l_sql as al_sql then
+					al_sql.replace_substring_all ("<<PUMP_FK>>", l_pk.out)
+					al_sql.replace_substring_all ("<<VALUE_DATE>>", ic_temperature.item.t_date.out)
+					al_sql.replace_substring_all ("<<VALUE>>", ic_temperature.item.t_value.out)
+					al_sql.replace_substring_all ("<<TYPE>>", "TEMPERATURE")
+					create l_modify.make (al_sql, database)
+					l_modify.execute
+				end
+			end
+		end
+
 	-- update pump information
 	-- update pump-data information
 	-- delete a pump and it's pump-data
