@@ -1,5 +1,6 @@
 note
 	description: "Database Access Controller"
+	ca_ignore: "CA005"	-- "	Unneeded object test local	EP_DB	97, 20	40	"
 
 class
 	EP_DB

@@ -20,6 +20,7 @@ note
 		otherwise reset it to a baseline of test data, then uncomment the code
 		and run the test and then comment it back out afterward.
 		]"
+	ca_ignore: "CA085"
 
 class
 	EP_DB_TEST_SET
@@ -74,6 +75,7 @@ feature -- Test routines
 			l_db: EP_DB
 		do
 			create l_db
+			l_db.do_nothing -- Avoids CA020
 		end
 
 	ep_db_is_pump_in_db_tests

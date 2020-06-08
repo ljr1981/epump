@@ -3,8 +3,9 @@ note
 	warning: "[
 		This data is for testing purposes only!
 		
-		
+
 		]"
+	ca_ignore: "CA033", "CA032", "CA020"
 
 class
 	EP_TEST_DATA
