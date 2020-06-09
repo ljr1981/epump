@@ -291,11 +291,11 @@ feature -- Basic Operations
 			end
 		end
 
-	-- export pumps and pump-date to XML (standard XML file)
-	-- export pumps and pump-date to CSV (standard comma-separated-value file)
-	-- export pumps and pump-date to XLM (Excel spreadsheet)
-	-- export pumps and pump-date to HTML (report with SVG graphics)
-	-- export pumps and pump-date to SVG (graphical representation)
+	-- export all pumps and pump-date to XML (standard XML file)
+	-- export all pumps and pump-date to CSV (standard comma-separated-value file)
+	-- export all pumps and pump-date to XLM (Excel spreadsheet)
+	-- export all pumps and pump-date to HTML (report with SVG graphics)
+	-- export all pumps and pump-date to SVG (graphical representation)
 
 	-- import pumps from XML
 	-- import pump-data from XML
