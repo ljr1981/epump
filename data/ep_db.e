@@ -82,6 +82,12 @@ feature -- Queries
 			still_has_pump: is_pump_in_db (a_pump)
 		end
 
+	pump_pk_list: ARRAYED_LIST [INTEGER]
+			--
+		do
+			Result := sql_query_integer_list (" SELECT pk FROM pump ;")
+		end
+
 feature -- SQL Queries
 
 	sql_query_boolean (a_sql: STRING): BOOLEAN
