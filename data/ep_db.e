@@ -120,10 +120,30 @@ feature -- Basic Operations
 
 	all_pumps: ARRAYED_LIST [EP_PUMP]
 			-- Load `all_pumps' from DB.
+		local
+			l_pump: EP_PUMP
+			l_pk: INTEGER
+			l_date: DATE
 		do
 			create Result.make (pump_count)
+			across
+				sql_query (" SELECT tool, chamber, model, pk FROM pump ;") as ic
+			loop
+				l_pk := ic.item.integer_value (4)
+				create l_pump.make (ic.item.string_value (1), ic.item.string_value (2), ic.item.string_value (3))
+				across
+					sql_query (" SELECT value_date, value, type FROM pump_data WHERE pump_fk = " + l_pk.out + " ;") as ic_data
+				loop
+					create l_date.make_from_string_default (ic_data.item.string_value (1))
+					if ic_data.item.string_value (3).same_string ("EXHAUST") then
+						l_pump.add_exhaust_item (l_date, ic_data.item.real_value (2))
+					else
+						l_pump.add_temperature_item (l_date, ic_data.item.real_value (2))
+					end
+				end
+				Result.force (l_pump)
+			end
 		end
-
 
 	-- pump_by_pk
 	-- pump_by_key

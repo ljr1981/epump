@@ -153,6 +153,26 @@ feature -- Test routines
 			assert_integers_equal ("list_count", 138, l_list.count)
 		end
 
+	ep_db_all_pumps_test
+			-- do we have a list of pumps?
+		note
+			testing: "execution/serial"
+		local
+			l_db: EP_DB
+			l_list: ARRAYED_LIST [EP_PUMP]
+			l_pump: EP_PUMP
+		do
+			create l_db
+			l_list := l_db.all_pumps
+			assert_booleans_equal ("has_pumps", True, l_db.has_pumps)
+			assert_integers_equal ("list_count", 138, l_list.count)
+
+			l_pump := l_list.i_th (1)
+			assert_strings_equal ("pump_1", "CFAMT01X-A-80/500", l_pump.key)
+			assert_integers_equal ("exhaust_count", 4, l_pump.exhaust_data.count)
+			assert_integers_equal ("temperature_count", 4, l_pump.temperature_data.count)
+		end
+
 end
 
 
