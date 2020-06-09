@@ -296,22 +296,77 @@ feature -- Basic Operations
 			-- Export `all_pumps' as XML file
 		local
 			l_file: PLAIN_TEXT_FILE
-			l_xml,
-			l_pump,
-			l_pump_data
-			l_element: STRING
+			l_pumps_xml,
+			l_pumps_xml_replacement,
+			l_pump_xml,
+			l_pump_data_xml,
+			l_element_xml,
+			l_data_elements_replacement: STRING
 		do
 			across
 				all_pumps as ic_pumps
 			from
-				l_xml := xml_template.twin
+				l_pumps_xml := xml_pumps_template.twin
+				create l_pumps_xml_replacement.make_empty
 			loop
-				l_pump := xml_pump_template.twin
-				l_pump
+				l_pump_xml := Xml_pump_template.twin
+				l_pump_xml.replace_substring_all ("<<TOOL>>", ic_pumps.item.tool)
+				l_pump_xml.replace_substring_all ("<<CHAMBER>>", ic_pumps.item.chamber)
+				l_pump_xml.replace_substring_all ("<<MODEL>>", ic_pumps.item.model)
+				l_pump_xml.replace_substring_all ("<<KEY>>", ic_pumps.item.key)
+					-- Exhaust data
+				across
+					ic_pumps.item.exhaust_data as ic_exhaust_data
+				from
+					l_pump_data_xml := Xml_pump_data_template.twin
+					l_pump_data_xml.replace_substring_all ("<<TYPE>>", "EXHAUST")
+					create l_data_elements_replacement.make_empty
+				loop
+					l_element_xml := Xml_pump_data_element_template.twin
+					l_element_xml.replace_substring_all ("<<DATE>>", ic_exhaust_data.item.t_date.out)
+					l_element_xml.replace_substring_all ("<<VALUE>>", ic_exhaust_data.item.t_value.out)
+						-- add to elements list
+					l_data_elements_replacement.append_character ('%N')
+					l_data_elements_replacement.append_character ('%T')
+					l_data_elements_replacement.append_character ('%T')
+					l_data_elements_replacement.append_character ('%T') -- indented 3
+					l_data_elements_replacement.append_string_general (l_element_xml)
+				end
+				l_pump_data_xml.replace_substring_all ("<<DATA_ELEMENTS>>", l_data_elements_replacement)
+				l_pump_xml.replace_substring_all ("<<EXHAUST_DATA>>", l_pump_data_xml)
+					-- Temperature data
+				across
+					ic_pumps.item.temperature_data as ic_temperature_data
+				from
+					l_pump_data_xml := Xml_pump_data_template.twin
+					l_pump_data_xml.replace_substring_all ("<<TYPE>>", "TEMPERATURE")
+					create l_data_elements_replacement.make_empty
+				loop
+					l_element_xml := Xml_pump_data_element_template.twin
+					l_element_xml.replace_substring_all ("<<DATE>>", ic_temperature_data.item.t_date.out)
+					l_element_xml.replace_substring_all ("<<VALUE>>", ic_temperature_data.item.t_value.out)
+						-- add to elements list
+					l_data_elements_replacement.append_character ('%N')
+					l_data_elements_replacement.append_character ('%T')
+					l_data_elements_replacement.append_character ('%T')
+					l_data_elements_replacement.append_character ('%T') -- indented 3
+					l_data_elements_replacement.append_string_general (l_element_xml)
+				end
+				l_pump_data_xml.replace_substring_all ("<<DATA_ELEMENTS>>", l_data_elements_replacement)
+				l_pump_xml.replace_substring_all ("<<TEMPERATURE_DATA>>", l_pump_data_xml)
+				l_pumps_xml_replacement.append_string_general (l_pump_xml)
+				l_pumps_xml_replacement.append_character ('%N')
 			end
+			l_pumps_xml.replace_substring_all ("<<PUMPS>>", l_pumps_xml_replacement)
+
+				-- Now, out to file ...
+			create l_file.make_open_write (a_file_name)
+			l_file.put_string (l_pumps_xml)
+			l_file.flush
+			l_file.close
 		end
 
-	xml_template: STRING = "[
+	xml_pumps_template: STRING = "[
 <pumps>
 	<<PUMPS>>
 </pumps>
@@ -319,7 +374,8 @@ feature -- Basic Operations
 
 	xml_pump_template: STRING = "[
 	<pump tool='<<TOOL>>' chamber='<<CHAMBER>>' model=<<MODEL>> key='<<KEY>>'>
-		<<PUMP_DATA>>
+		<<EXHAUST_DATA>>
+		<<TEMPERATURE_DATA>>
 	</pump>
 ]"
 

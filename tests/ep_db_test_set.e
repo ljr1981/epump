@@ -173,6 +173,19 @@ feature -- Test routines
 			assert_integers_equal ("temperature_count", 4, l_pump.temperature_data.count)
 		end
 
+	ep_db_export_all_pumps_to_xml_tests
+			-- Test export to XML
+		note
+			testing: "execution/serial"
+		local
+			l_db: EP_DB
+			l_list: ARRAYED_LIST [EP_PUMP]
+			l_pump: EP_PUMP
+		do
+			create l_db
+			l_db.export_all_pumps_to_xml ("all_pumps.xml")
+		end
+
 end
 
 
