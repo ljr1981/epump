@@ -32,7 +32,61 @@ feature {NONE} -- Initialize
 			end
 		end
 
+feature -- Queries
+
+	pump_count: INTEGER
+			-- How many pumps in our DB?
+		do
+			Result := sql_query_integer (" SELECT COUNT(pk) FROM pump; ")
+		end
+
+feature -- SQL Queries
+
+	sql_query_boolean (a_sql: STRING): BOOLEAN
+			-- A `sql_query' returning one BOOLEAN value
+		do
+			Result := sql_query (a_sql).item.boolean_value (1)
+		end
+
+	sql_query_integer (a_sql: STRING): INTEGER
+			-- A `sql_query' returning one INTEGER value.
+		do
+			Result := sql_query (a_sql).item.integer_value (1)
+		end
+
+	sql_query_integer_list (a_sql: STRING): ARRAYED_LIST [INTEGER]
+			-- A `sql_query' returning a list of INTEGER values.
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			create Result.make (100)
+			across
+				sql_query (a_sql) as ic
+			loop
+				Result.force (ic.item.integer_value (1))
+			end
+		end
+
 feature -- Basic Operations
+
+	all_pumps: ARRAYED_LIST [EP_PUMP]
+			-- Load `all_pumps' from DB.
+		do
+			create Result.make (pump_count)
+		end
+
+
+	-- pump_by_pk
+	-- pump_by_key
+	-- pumps_in_pk_range
+	-- pumps_by_criteria
+	-- pumps_by_key
+	-- pumps_like_key
+	-- pumps_by_chamber
+	-- pumps_like_chamber
+	-- pumps_by_model
+	-- pumps_like_model
 
 	-- add a new pump
 
@@ -233,6 +287,23 @@ feature -- Constants
 
 	db_file_name: STRING = "epump.sqlite3"
 			-- What to call the DB for this app.
+
+feature {NONE} -- Implementation: SQL Command & Query
+
+	sql_command (a_sql: STRING)
+		local
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			sql_query (a_sql).do_nothing
+		end
+
+	sql_query (a_sql: STRING): SQLITE_STATEMENT_ITERATION_CURSOR
+		local
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			create l_modify.make (a_sql, database)
+			Result := l_modify.execute_new
+		end
 
 feature {NONE} -- Implementation: DB Recreation
 

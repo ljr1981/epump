@@ -127,6 +127,17 @@ feature -- Test routines
 			l_db.delete_pump_with_data (l_pump, agent do_nothing)
 		end
 
+	ep_db_pump_count_test
+			-- test pump count
+		note
+			testing: "execution/serial"
+		local
+			l_db: EP_DB
+		do
+			create l_db
+			assert_integers_equal ("pump_count", 138, l_db.pump_count)
+		end
+
 end
 
 
