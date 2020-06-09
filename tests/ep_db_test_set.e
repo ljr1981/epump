@@ -135,6 +135,7 @@ feature -- Test routines
 			l_db: EP_DB
 		do
 			create l_db
+			assert_booleans_equal ("has_pumps", True, l_db.has_pumps)
 			assert_integers_equal ("pump_count", 138, l_db.pump_count)
 		end
 

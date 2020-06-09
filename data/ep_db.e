@@ -40,6 +40,48 @@ feature -- Queries
 			Result := sql_query_integer (" SELECT COUNT(pk) FROM pump; ")
 		end
 
+	has_pumps: BOOLEAN
+			-- Do we have pumps in DB?
+		do
+			Result := pump_count > 0
+		end
+
+	is_pump_in_db (a_pump: EP_PUMP): BOOLEAN
+			-- Is `a_pump' already in the DB?
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_sql := "SELECT COUNT(*) FROM pump WHERE key='" + a_pump.key + "';"
+			create l_modify.make (l_sql, database)
+			check compiled: l_modify.is_compiled end
+			across
+				l_modify.execute_new as ic
+			loop
+				Result := ic.item.integer_value (column_one_const) = (True).to_integer
+			end
+		end
+
+	pump_has_data (a_pump: EP_PUMP): BOOLEAN
+			-- Does `a_pump' have data in pump_data?
+		require
+			has_pump: is_pump_in_db (a_pump)
+		local
+			l_sql: STRING
+			l_modify: SQLITE_MODIFY_STATEMENT
+		do
+			l_sql := " SELECT COUNT(*) FROM pump_data WHERE pump_fk = " + pump_pk (a_pump).out + " ;"
+			create l_modify.make (l_sql, database)
+			check compiled: l_modify.is_compiled end
+			across
+				l_modify.execute_new as ic
+			loop
+				Result := ic.item.integer_value (column_one_const) > 0
+			end
+		ensure
+			still_has_pump: is_pump_in_db (a_pump)
+		end
+
 feature -- SQL Queries
 
 	sql_query_boolean (a_sql: STRING): BOOLEAN
@@ -233,44 +275,6 @@ feature -- Basic Operations
 	-- import pump-data from XML
 	-- import pumps from CSV
 	-- import pump-data from CSV
-
-feature -- Helpers
-
-	is_pump_in_db (a_pump: EP_PUMP): BOOLEAN
-			-- Is `a_pump' already in the DB?
-		local
-			l_sql: STRING
-			l_modify: SQLITE_MODIFY_STATEMENT
-		do
-			l_sql := "SELECT COUNT(*) FROM pump WHERE key='" + a_pump.key + "';"
-			create l_modify.make (l_sql, database)
-			check compiled: l_modify.is_compiled end
-			across
-				l_modify.execute_new as ic
-			loop
-				Result := ic.item.integer_value (column_one_const) = (True).to_integer
-			end
-		end
-
-	pump_has_data (a_pump: EP_PUMP): BOOLEAN
-			-- Does `a_pump' have data in pump_data?
-		require
-			has_pump: is_pump_in_db (a_pump)
-		local
-			l_sql: STRING
-			l_modify: SQLITE_MODIFY_STATEMENT
-		do
-			l_sql := " SELECT COUNT(*) FROM pump_data WHERE pump_fk = " + pump_pk (a_pump).out + " ;"
-			create l_modify.make (l_sql, database)
-			check compiled: l_modify.is_compiled end
-			across
-				l_modify.execute_new as ic
-			loop
-				Result := ic.item.integer_value (column_one_const) > 0
-			end
-		ensure
-			still_has_pump: is_pump_in_db (a_pump)
-		end
 
 	column_one_const: NATURAL_32 = 1
 
