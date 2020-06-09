@@ -1,6 +1,6 @@
 note
 	description: "Tests of the EP_DB class"
-	testing: "type/manual", "execution/isolated"
+	testing: "type/manual"
 	warning: "[
 		This class MUST run in `execution/isolated' (e.g. a private evaluator])!
 		
@@ -71,6 +71,8 @@ feature -- Test routines
 
 	ep_db_tests
 			-- New test routine
+		note
+			testing: "execution/serial"
 		local
 			l_db: EP_DB
 		do
@@ -80,6 +82,8 @@ feature -- Test routines
 
 	ep_db_is_pump_in_db_tests
 			--
+		note
+			testing: "execution/serial"
 		local
 			l_db: EP_DB
 			l_pump: EP_PUMP
@@ -96,6 +100,8 @@ feature -- Test routines
 
 	ep_db_add_new_pump_tests
 			-- Ensure we add a new pump and silently swallow dupes.
+		note
+			testing: "execution/serial"
 		local
 			l_db: EP_DB
 			l_pump: EP_PUMP
@@ -108,6 +114,8 @@ feature -- Test routines
 
 	ep_db_delete_pump_with_data_tests
 			-- Ensure an inserted pump is successfully deleted.
+		note
+			testing: "execution/serial"
 		local
 			l_db: EP_DB
 			l_pump: EP_PUMP
