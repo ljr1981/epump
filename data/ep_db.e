@@ -291,11 +291,52 @@ feature -- Basic Operations
 			end
 		end
 
-	-- export all pumps and pump-date to XML (standard XML file)
-	-- export all pumps and pump-date to CSV (standard comma-separated-value file)
-	-- export all pumps and pump-date to XLM (Excel spreadsheet)
-	-- export all pumps and pump-date to HTML (report with SVG graphics)
-	-- export all pumps and pump-date to SVG (graphical representation)
+	-- export all pumps and pump-data to XML (standard XML file)
+	export_all_pumps_to_xml (a_file_name: STRING)
+			-- Export `all_pumps' as XML file
+		local
+			l_file: PLAIN_TEXT_FILE
+			l_xml,
+			l_pump,
+			l_pump_data
+			l_element: STRING
+		do
+			across
+				all_pumps as ic_pumps
+			from
+				l_xml := xml_template.twin
+			loop
+				l_pump := xml_pump_template.twin
+				l_pump
+			end
+		end
+
+	xml_template: STRING = "[
+<pumps>
+	<<PUMPS>>
+</pumps>
+]"
+
+	xml_pump_template: STRING = "[
+	<pump tool='<<TOOL>>' chamber='<<CHAMBER>>' model=<<MODEL>> key='<<KEY>>'>
+		<<PUMP_DATA>>
+	</pump>
+]"
+
+	xml_pump_data_template: STRING = "[
+		<pump_data type='<<TYPE>>'>
+			<<DATA_ELEMENTS>>
+		</pump_data>
+]"
+
+	xml_pump_data_element_template: STRING = "[
+		<element value_date='<<DATE>>' value=<<VALUE>> />
+]"
+
+	-- export all pumps and pump-data to CSV (standard comma-separated-value file)
+	-- export all pumps and pump-data to XLM (Excel spreadsheet)
+	-- export all pumps and pump-data to HTML (report with SVG graphics)
+	-- export all pumps and pump-data to SVG (graphical representation)
 
 	-- import pumps from XML
 	-- import pump-data from XML
