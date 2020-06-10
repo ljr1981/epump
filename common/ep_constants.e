@@ -7,15 +7,19 @@ class
 feature {NONE} -- Implementation: Constants
 
 	Second_item_const: INTEGER = 2
+			-- Representation of a second item (perhaps in a list).
 
 	Imminent_exhaust_rate_failure_threshhold: REAL = 0.5
 	Imminent_pressure_level_failure_threshhold: REAL = 6.0
+			-- Imminent exhaust and pressure levels for testing purposes.
 
 	Potential_exhaust_rate_failure_threshhold: REAL = 0.2
 	Potential_pressure_level_failure_threshhold: REAL = 3.5
+			-- Potential exhaust and pressure levels for testing purposes.
 
 	Exhaust_rate_code: STRING = "EXHAUST_RATE"
 	Pressure_level_code: STRING = "PRESSURE_LEVEL"
+			-- Code constants for exhaust and pressure.
 
 feature -- Constants
 
