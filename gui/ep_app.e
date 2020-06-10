@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	application: EV_APPLICATION
+			-- Primary core application.
 
 	main_window: EP_MAIN_WINDOW
+			-- Primary application window.
 
 end
