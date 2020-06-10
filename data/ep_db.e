@@ -394,12 +394,6 @@ feature -- Basic Operations
 		-- import pumps from CSV
 		-- import pump-data from CSV
 
-	column_one_const: NATURAL_32 = 1
-
-feature -- Constants: Helpers
-
-	sql_select: SLE_READ once create Result end
-
 feature -- Access
 
 	factory: SLE_FACTORY
@@ -410,21 +404,23 @@ feature -- Constants
 	db_file_name: STRING = "epump.sqlite3"
 			-- What to call the DB for this app.
 
+	column_one_const: NATURAL_32 = 1
+			-- Representing the first column.
+
 feature {NONE} -- Implementation: SQL Command & Query
 
 	sql_command (a_sql: STRING)
-		local
-			l_modify: SQLITE_MODIFY_STATEMENT
+			-- Perform a `sql_command' using `a_sql' statement,
+			--	where there is not return result.
 		do
 			sql_query (a_sql).do_nothing
 		end
 
 	sql_query (a_sql: STRING): SQLITE_STATEMENT_ITERATION_CURSOR
-		local
-			l_modify: SQLITE_MODIFY_STATEMENT
+			-- Perform a `sql_query' using `a_sql' statement,
+			--	returning an iteration cursor result.
 		do
-			create l_modify.make (a_sql, database)
-			Result := l_modify.execute_new
+			Result := (create {SQLITE_MODIFY_STATEMENT}.make (a_sql, database)).execute_new
 		end
 
 feature {NONE} -- Implementation: DB Recreation
