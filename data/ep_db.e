@@ -129,13 +129,13 @@ feature -- Basic Operations
 			across
 				sql_query (" SELECT tool, chamber, model, pk FROM pump ;") as ic
 			loop
-				l_pk := ic.item.integer_value (4)
-				create l_pump.make (ic.item.string_value (1), ic.item.string_value (2), ic.item.string_value (3))
+				l_pk := ic.item.integer_value (Column_four_const)
+				create l_pump.make (ic.item.string_value (Column_one_const), ic.item.string_value (Column_two_const), ic.item.string_value (Column_three_const))
 				across
 					sql_query (" SELECT value_date, value, type FROM pump_data WHERE pump_fk = " + l_pk.out + " ;") as ic_data
 				loop
 					create l_date.make_from_string_default (ic_data.item.string_value (Column_one_const))
-					if ic_data.item.string_value (3).same_string ("EXHAUST") then
+					if ic_data.item.string_value (Column_three_const).same_string ("EXHAUST") then
 						l_pump.add_exhaust_item (l_date, ic_data.item.real_value (Column_two_const))
 					else
 						l_pump.add_temperature_item (l_date, ic_data.item.real_value (Column_two_const))
@@ -409,6 +409,12 @@ feature -- Constants
 
 	Column_two_const: NATURAL_32 = 2
 			-- Representing notion of second column.
+
+	Column_three_const: NATURAL_32 = 3
+			-- Representing notion of third column.
+
+	Column_four_const: NATURAL_32 = 4
+			-- Representing notion of fourth column.
 
 	No_pumps: INTEGER = 0
 			-- Representing notion of `no_pumps'.
