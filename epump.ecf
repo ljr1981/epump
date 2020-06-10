@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="epump" uuid="3D9878AF-48C0-691B-9E04-000056A736DA" readonly="false">
 	<description>epump implementation</description>
 	<target name="epump">
-		<root all_classes="true"/>
+		<root class="EP_APP" feature="make"/>
 		<option warning="warning" syntax="provisional" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
@@ -19,6 +19,8 @@
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
 		<library name="sqlite_ext" location="$GITHUB\sqlite_ext\sqlite_ext.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
 		<cluster name="epump" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.git$</exclude>
@@ -29,6 +31,24 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="gui_test" extends="epump">
+		<description>epump GUI Tests</description>
+		<root class="EP_APP" feature="make"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>tests</exclude>
+			<include>gui_tests</include>
+		</file_rule>
+		<option profile="false">
+		</option>
+		<setting name="console_application" value="false"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<cluster name="gui_tests" location=".\gui_tests\" recursive="true"/>
+	</target>
 	<target name="test" extends="epump">
 		<description>epump Tests</description>
 		<root class="ANY" feature="default_create"/>
@@ -37,6 +57,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>gui_tests</exclude>
 			<include>tests</include>
 		</file_rule>
 		<option profile="false">
