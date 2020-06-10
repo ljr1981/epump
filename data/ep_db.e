@@ -26,7 +26,7 @@ feature {NONE} -- Initialize
 			create_db_path
 			database.do_nothing -- create fresh, if needed
 
-			create l_file.make_with_name (Db_file_name)
+			create l_file.make_with_name (DB_file_name)
 			if l_file.is_empty then
 				make_empty_from_scratch
 			end
@@ -43,7 +43,7 @@ feature -- Queries
 	has_pumps: BOOLEAN
 			-- Do we have pumps in DB?
 		do
-			Result := pump_count > 0
+			Result := pump_count > No_pumps
 		end
 
 	is_pump_in_db (a_pump: EP_PUMP): BOOLEAN
@@ -58,7 +58,7 @@ feature -- Queries
 			across
 				l_modify.execute_new as ic
 			loop
-				Result := ic.item.integer_value (column_one_const) = (True).to_integer
+				Result := ic.item.integer_value (Column_one_const) = (True).to_integer
 			end
 		end
 
@@ -76,14 +76,14 @@ feature -- Queries
 			across
 				l_modify.execute_new as ic
 			loop
-				Result := ic.item.integer_value (column_one_const) > 0
+				Result := ic.item.integer_value (Column_one_const) > No_pumps
 			end
 		ensure
 			still_has_pump: is_pump_in_db (a_pump)
 		end
 
 	pump_pk_list: ARRAYED_LIST [INTEGER]
-			--
+			-- A list of pump primary keys.
 		do
 			Result := sql_query_integer_list (" SELECT pk FROM pump ;")
 		end
@@ -93,13 +93,13 @@ feature -- SQL Queries
 	sql_query_boolean (a_sql: STRING): BOOLEAN
 			-- A `sql_query' returning one BOOLEAN value
 		do
-			Result := sql_query (a_sql).item.boolean_value (1)
+			Result := sql_query (a_sql).item.boolean_value (Column_one_const)
 		end
 
 	sql_query_integer (a_sql: STRING): INTEGER
 			-- A `sql_query' returning one INTEGER value.
 		do
-			Result := sql_query (a_sql).item.integer_value (1)
+			Result := sql_query (a_sql).item.integer_value (Column_one_const)
 		end
 
 	sql_query_integer_list (a_sql: STRING): ARRAYED_LIST [INTEGER]
@@ -112,7 +112,7 @@ feature -- SQL Queries
 			across
 				sql_query (a_sql) as ic
 			loop
-				Result.force (ic.item.integer_value (1))
+				Result.force (ic.item.integer_value (Column_one_const))
 			end
 		end
 
@@ -134,11 +134,11 @@ feature -- Basic Operations
 				across
 					sql_query (" SELECT value_date, value, type FROM pump_data WHERE pump_fk = " + l_pk.out + " ;") as ic_data
 				loop
-					create l_date.make_from_string_default (ic_data.item.string_value (1))
+					create l_date.make_from_string_default (ic_data.item.string_value (Column_one_const))
 					if ic_data.item.string_value (3).same_string ("EXHAUST") then
-						l_pump.add_exhaust_item (l_date, ic_data.item.real_value (2))
+						l_pump.add_exhaust_item (l_date, ic_data.item.real_value (Column_two_const))
 					else
-						l_pump.add_temperature_item (l_date, ic_data.item.real_value (2))
+						l_pump.add_temperature_item (l_date, ic_data.item.real_value (Column_two_const))
 					end
 				end
 				Result.force (l_pump)
@@ -282,7 +282,7 @@ feature -- Basic Operations
 			across
 				l_modify.execute_new as ic
 			loop
-				Result := ic.item.integer_value (column_one_const)
+				Result := ic.item.integer_value (Column_one_const)
 			end
 		end
 
@@ -401,11 +401,17 @@ feature -- Access
 
 feature -- Constants
 
-	db_file_name: STRING = "epump.sqlite3"
+	DB_file_name: STRING = "epump.sqlite3"
 			-- What to call the DB for this app.
 
-	column_one_const: NATURAL_32 = 1
-			-- Representing the first column.
+	Column_one_const: NATURAL_32 = 1
+			-- Representing notion of first column.
+
+	Column_two_const: NATURAL_32 = 2
+			-- Representing notion of second column.
+
+	No_pumps: INTEGER = 0
+			-- Representing notion of `no_pumps'.
 
 feature {NONE} -- Implementation: SQL Command & Query
 
