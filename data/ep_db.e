@@ -1,6 +1,6 @@
 note
 	description: "Database Access Controller"
-	ca_ignore: "CA005"	-- "	Unneeded object test local	EP_DB	97, 20	40	"
+	ca_ignore: "CA005"	-- Unneeded object test local
 
 class
 	EP_DB
@@ -145,18 +145,16 @@ feature -- Basic Operations
 			end
 		end
 
-	-- pump_by_pk
-	-- pump_by_key
-	-- pumps_in_pk_range
-	-- pumps_by_criteria
-	-- pumps_by_key
-	-- pumps_like_key
-	-- pumps_by_chamber
-	-- pumps_like_chamber
-	-- pumps_by_model
-	-- pumps_like_model
-
-	-- add a new pump
+		-- pump_by_pk
+		-- pump_by_key
+		-- pumps_in_pk_range
+		-- pumps_by_criteria
+		-- pumps_by_key
+		-- pumps_like_key
+		-- pumps_by_chamber
+		-- pumps_like_chamber
+		-- pumps_by_model
+		-- pumps_like_model
 
 	add_new_pump (a_pump: EP_PUMP; a_update_agent: PROCEDURE)
 			-- Add a new `a_pump' to DB.
@@ -187,8 +185,6 @@ feature -- Basic Operations
 		do
 			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model), a_update_agent)
 		end
-
-	-- add new pump-data for a pump
 
 	add_new_pump_data (a_data: ARRAY [EP_PUMP]; a_update_agent: PROCEDURE)
 			-- Add a new pump_data from a_data list of Pumps.
@@ -240,12 +236,11 @@ feature -- Basic Operations
 			end
 		end
 
-	-- update pump information
-	-- update pump-data information
-	-- delete a pump and it's pump-data
+		-- update pump information
+		-- update pump-data information
 
 	delete_pump_with_data (a_pump: EP_PUMP; a_update_agent: PROCEDURE)
-			--
+		-- delete a pump and it's pump-data
 		require
 			has_pump: is_pump_in_db (a_pump)
 		local
@@ -291,9 +286,9 @@ feature -- Basic Operations
 			end
 		end
 
-	-- export all pumps and pump-data to XML (standard XML file)
 	export_all_pumps_to_xml (a_file_name: STRING)
 			-- Export `all_pumps' as XML file
+			-- export all pumps and pump-data to XML (standard XML file)
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_pumps_xml,
@@ -389,15 +384,15 @@ feature -- Basic Operations
 		<element value_date='<<DATE>>' value=<<VALUE>> />
 ]"
 
-	-- export all pumps and pump-data to CSV (standard comma-separated-value file)
-	-- export all pumps and pump-data to XLM (Excel spreadsheet)
-	-- export all pumps and pump-data to HTML (report with SVG graphics)
-	-- export all pumps and pump-data to SVG (graphical representation)
+		-- export all pumps and pump-data to CSV (standard comma-separated-value file)
+		-- export all pumps and pump-data to XLM (Excel spreadsheet)
+		-- export all pumps and pump-data to HTML (report with SVG graphics)
+		-- export all pumps and pump-data to SVG (graphical representation)
 
-	-- import pumps from XML
-	-- import pump-data from XML
-	-- import pumps from CSV
-	-- import pump-data from CSV
+		-- import pumps from XML
+		-- import pump-data from XML
+		-- import pumps from CSV
+		-- import pump-data from CSV
 
 	column_one_const: NATURAL_32 = 1
 
