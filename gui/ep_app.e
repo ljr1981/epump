@@ -28,6 +28,6 @@ feature {NONE} -- Implementation
 
 	application: EV_APPLICATION
 
-	main_window: EV_TITLED_WINDOW
+	main_window: EP_MAIN_WINDOW
 
 end
