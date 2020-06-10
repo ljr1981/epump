@@ -4,7 +4,7 @@ note
 		See design notes in the note-clause at the bottom of the class.
 		]"
 	ca_ignore: "CA029",
-				"CA005" --Unneeded object test local	EP_PUMP	246, 16	40
+				"CA005" -- Unneeded object test local
 
 class
 	EP_PUMP

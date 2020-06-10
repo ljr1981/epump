@@ -6,6 +6,11 @@ class
 	EP_DB
 
 inherit
+	EP_ANY
+		undefine
+			default_create
+		end
+
 	SLE_DB_AWARE
 
 feature {NONE} -- Initialize
@@ -398,26 +403,6 @@ feature -- Access
 
 	factory: SLE_FACTORY
 			-- A `factory' for doing DB things.
-
-feature -- Constants
-
-	DB_file_name: STRING = "epump.sqlite3"
-			-- What to call the DB for this app.
-
-	Column_one_const: NATURAL_32 = 1
-			-- Representing notion of first column.
-
-	Column_two_const: NATURAL_32 = 2
-			-- Representing notion of second column.
-
-	Column_three_const: NATURAL_32 = 3
-			-- Representing notion of third column.
-
-	Column_four_const: NATURAL_32 = 4
-			-- Representing notion of fourth column.
-
-	No_pumps: INTEGER = 0
-			-- Representing notion of `no_pumps'.
 
 feature {NONE} -- Implementation: SQL Command & Query
 
