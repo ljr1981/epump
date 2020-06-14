@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 			--<Precursor>
 		do
 			Precursor
+			create main_box
+			create pump_grid.make
 		end
 
 	initialize
@@ -29,7 +31,17 @@ feature {NONE} -- Initialization
 			Precursor
 			create db
 			create eval
+				-- GUI
+			extend (main_box)
+			main_box.extend (pump_grid.widget)
 		end
+
+feature {NONE} -- Widgets
+
+	main_box: EV_VERTICAL_BOX
+
+	pump_grid: EP_PUMP_GRID
+			-- A grid for displaying pumps
 
 feature {NONE} -- Implementation
 
