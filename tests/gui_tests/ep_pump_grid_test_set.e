@@ -11,9 +11,11 @@ inherit
 feature -- Test routines
 
 	view_data_in_grid_test
-			--
+			-- Demonstrate the pump grid
+		note
+			EIS: "name=demo_video", "src=https://youtu.be/n3u_hQ4Et2g"
 		do
-			show_me := True
+			show_me := False
 			demonstrate_widget ( (create {EP_PUMP_GRID}.make_with_pumps (db.all_pumps.to_array)).widget )
 		end
 
