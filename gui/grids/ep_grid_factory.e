@@ -4,6 +4,9 @@ note
 class
 	EP_GRID_FACTORY
 
+inherit
+	EV_STOCK_COLORS_EXT
+
 feature -- Access: Grids
 
 	grid_ext: EV_GRID_EXT
