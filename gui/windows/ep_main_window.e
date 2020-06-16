@@ -22,18 +22,18 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create main_box
-			create pump_grid.make
+			create pump_grid.make_with_pumps (db.all_pumps.to_array)
 		end
 
 	initialize
 			--<Precursor>
 		do
 			Precursor
-			create db
 			create eval
 				-- GUI
 			extend (main_box)
 			main_box.extend (pump_grid.widget)
+			set_icon_pixmap ( (create {IMG_DOCUMENTATION}.make).to_pixmap )
 		end
 
 feature {NONE} -- Widgets
@@ -47,6 +47,9 @@ feature {NONE} -- Implementation
 
 	db: EP_DB
 			-- Database of Current Window.
+		once
+			create Result
+		end
 
 	eval: EP_EVALUATOR
 			-- Pump Evaluator of Current Window.
