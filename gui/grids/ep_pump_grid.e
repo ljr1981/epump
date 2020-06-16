@@ -16,20 +16,20 @@ feature {NONE} -- Initialization
 			-- Initialize Current with an array of `a_pumps'.
 		local
 			l_factory: EP_GRID_FACTORY
-			l_checkable: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_choice: EV_GRID_CHOICE_ITEM
-			l_combo: EV_GRID_COMBO_ITEM
-			l_drawable: EV_GRID_DRAWABLE_ITEM
-			l_editable: EV_GRID_EDITABLE_ITEM
-			l_label: EV_GRID_LABEL_ITEM
-			l_pix_right: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			i: INTEGER
 			l_pump: EP_PUMP
+--			l_checkable: EV_GRID_CHECKABLE_LABEL_ITEM
+--			l_choice: EV_GRID_CHOICE_ITEM
+--			l_combo: EV_GRID_COMBO_ITEM
+--			l_drawable: EV_GRID_DRAWABLE_ITEM
+--			l_editable: EV_GRID_EDITABLE_ITEM
+--			l_label: EV_GRID_LABEL_ITEM
+--			l_pix_right: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 		do
 			create l_factory
-			widget := l_factory.grid_ext
-			widget.enable_row_colorizing
-			widget.enable_enter_key_tabbing
+			l_factory.set_target_grid (l_factory.grid_ext)
+			widget := l_factory.attached_target_grid
+
 			widget.set_minimum_size (575, 500)
 
 				-- Load Pump data to GUI
@@ -39,50 +39,44 @@ feature {NONE} -- Initialization
 				i := 1
 			loop
 				l_pump := ic.item
-
-				create l_label.make_with_text (i.out)
-				widget.set_item (1, i, l_label)
-				widget.column (1).set_width (25)
-				l_label.select_actions.extend (agent on_row_select (widget.row (i)))
-
-				widget.set_item (2, i, create {EV_GRID_LABEL_ITEM}.make_with_text (l_pump.tool))
-
-				widget.set_item (3, i, create {EV_GRID_LABEL_ITEM}.make_with_text (l_pump.chamber))
-
-				widget.set_item (4, i, create {EV_GRID_LABEL_ITEM}.make_with_text (l_pump.model))
+					-- # Column
+				l_factory.set_grid_label_with_width (i.out, 1, i, 25)
+				l_factory.attached_last_item.select_actions.extend (agent on_row_select (widget.row (i)))
+					-- Tool, Chamber, Model
+				l_factory.set_grid_label (l_pump.tool, 2, i)
+				l_factory.set_grid_label (l_pump.chamber, 3, i)
+				l_factory.set_grid_label (l_pump.model, 4, i)
 					-- Last exhaust value (if any)
-				create l_label.make_with_text (l_pump.latest_exhaust_value.out)
-				l_label.align_text_right
-				widget.set_item (5, i, l_label)
-				widget.column (5).set_width (65)
+				l_factory.set_grid_label_with_width (l_pump.latest_exhaust_value.out, 5, i, 65)
+				l_factory.attached_last_label.align_text_right
 					-- Last exhaust date (if any)
 				if attached l_pump.latest_exhaust_date as al_date then
-					widget.set_item (6, i, create {EV_GRID_LABEL_ITEM}.make_with_text (al_date.out))
+					l_factory.set_grid_label_with_width (al_date.out, 6, i, 65)
 				else
-					widget.set_item (6, i, create {EV_GRID_LABEL_ITEM}.make_with_text ("n/a"))
+					l_factory.set_grid_label_with_width ("n/a", 6, i, 65)
 				end
 					-- Last temperature value (if any)
-				create l_label.make_with_text (l_pump.latest_temperature_value.out)
-				l_label.align_text_right
-				widget.set_item (7, i, l_label)
-				widget.column (7).set_width (65)
+				l_factory.set_grid_label_with_width (l_pump.latest_exhaust_value.out, 7, i, 65)
+				l_factory.attached_last_label.align_text_right
 					-- Last temperature date (if any)
 				if attached l_pump.latest_temperature_date as al_date then
-					widget.set_item (8, i, create {EV_GRID_LABEL_ITEM}.make_with_text (al_date.out))
+					l_factory.set_grid_label_with_width (al_date.out, 8, i, 65)
 				else
-					widget.set_item (8, i, create {EV_GRID_LABEL_ITEM}.make_with_text ("n/a"))
+					l_factory.set_grid_label_with_width ("n/a", 8, i, 65)
 				end
 
 				i := i + 1
 			end
-			widget.column (1).header_item.set_text ("#")
-			widget.column (2).header_item.set_text ("Tool"); set_selection (2)
-			widget.column (3).header_item.set_text ("Chamber"); set_selection (3)
-			widget.column (4).header_item.set_text ("Model"); set_selection (4)
-			widget.column (5).header_item.set_text ("Last Exh"); set_selection (5)
-			widget.column (6).header_item.set_text ("Exh Date"); set_selection (6)
-			widget.column (7).header_item.set_text ("Last Temp"); set_selection (7)
-			widget.column (8).header_item.set_text ("Temp Date"); set_selection (8)
+			across
+				<<"#", "Tool", "Chamber", "Model", "Last Exh", "Exh Date", "Last Temp", "Temp Date">> as ic
+			loop
+				widget.column (ic.cursor_index).header_item.set_text (ic.item)
+				if ic.cursor_index > 1 then
+					set_selection (ic.cursor_index)
+				end
+			end
+
+			l_factory.clear_target_grid
 		end
 
 	set_selection (a_col: INTEGER)
