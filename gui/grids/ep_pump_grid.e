@@ -67,6 +67,9 @@ feature {NONE} -- Initialization
 
 				i := i + 1
 			end
+			if a_pumps.is_empty then
+				widget.set_column_count_to (8)
+			end
 			across
 				<<"#", "Tool", "Chamber", "Model", "Last Exh", "Exh Date", "Last Temp", "Temp Date">> as ic
 			loop
