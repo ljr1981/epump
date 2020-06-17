@@ -49,7 +49,7 @@
 	</target>
 	<target name="test" extends="epump">
 		<description>epump Tests</description>
-		<root class="ANY" feature="default_create"/>
+		<root class="EP_APP" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
