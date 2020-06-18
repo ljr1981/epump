@@ -58,18 +58,49 @@ feature -- Access
 	model: like key
 			-- Pump model
 
+	serial_number: like key do Result := key end
+
 	key: STRING
 			-- A `key' comprised of concatenated `tool', `chamber', and `model'.
-		do
+			-- Being repurposed as `serial_number'
+		note
+			design_change: "[
+				We never want a pump to not have a serial number (i.e. key).
+
+				The code (below) used to be a "do" vs "attribute". This
+				change is due to an overall design change.
+				
+				Originally, key was to be computed as tool+chamber+model.
+				While this might be sufficient for ensuring that pumps are
+				unique, it does not line up well with reality, which is
+				that pumps have unique serial numbers. Therefore, in
+				the real world, a serial number is much more semantically
+				useful than a arbitrarily computed notion of "key".
+				]"
+		attribute
 			Result := tool.twin
 			Result.append_character ('-')
 			Result.append_string_general (chamber)
 			Result.append_character ('-')
 			Result.append_string_general (model)
-		ensure
-			well_formed: Result.has_substring (tool) and then
-							Result.has_substring (chamber) and then
-							Result.has_substring (model)
+--		ensure
+--			well_formed: Result.has_substring (tool) and then
+--							Result.has_substring (chamber) and then
+--							Result.has_substring (model)
+		end
+
+	status_message: STRING
+			-- What is the Status of Current Pump?
+			-- Reasonable default = `In_service_status'.
+		do
+			Result := Service_statuses [status_code]
+		end
+
+	status_code: INTEGER
+			-- What is the status code?
+			-- This is what is stored in the DB.
+		attribute
+			Result := In_service_code
 		end
 
 	exhaust_data: attached like data_type_anchor
@@ -277,6 +308,21 @@ note
 		found in the Implementation feature group. These are suppliers to the
 		specific exhaust and temperature clients in the Exhaust and Temperature
 		Queries feature groups.
+		]"
+	status_design: "[
+		Why have both a Status Message and a Code (INTEGER)?
+		Is it not good enough to have on or the other?
+		
+		The present design envisions the numeric status being
+		stored in the DB for efficiency. Rarely will a user
+		be looking at the databse directly. They will mostly
+		use this program. Because of this, we have chosen to
+		store the status as an integer value in the DB and then
+		translate it to a status message in the program for
+		GUI presentation purposes (or reporting).
+		
+		Also, it is simpler and faster to sort integers in the
+		program than strings, and perhaps, more meaningful too.
 		]"
 
 end

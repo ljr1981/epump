@@ -1,7 +1,7 @@
 note
 	description: "Constants applied to System"
 
-class
+expanded class
 	EP_CONSTANTS
 
 feature {NONE} -- Implementation: Constants
@@ -40,5 +40,21 @@ feature -- Constants
 
 	No_pumps: INTEGER = 0
 			-- Representing notion of `no_pumps'.
+
+feature -- Statuses
+
+	In_service_status: STRING = "IN-SERVICE"
+	In_service_code: INTEGER = 1
+
+	Out_of_service_status: STRING = "OUT-OF-SERVICE"
+	Out_of_service_code: INTEGER = 2
+
+	In_repair_status: STRING = "IN-REPAIR"
+	In_repair_code: INTEGER = 3
+
+	Service_statuses: ARRAY [STRING]
+		once
+			Result := <<In_service_status, Out_of_service_status, In_repair_status>>
+		end
 
 end
