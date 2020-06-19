@@ -132,10 +132,10 @@ feature -- Basic Operations
 		do
 			create Result.make (pump_count)
 			across
-				sql_query (" SELECT tool, chamber, model, pk FROM pump ;") as ic
+				sql_query (" SELECT tool, chamber, model, pk, status FROM pump ;") as ic
 			loop
 				l_pk := ic.item.integer_value (Column_four_const)
-				create l_pump.make (ic.item.string_value (Column_one_const), ic.item.string_value (Column_two_const), ic.item.string_value (Column_three_const))
+				create l_pump.make (ic.item.string_value (Column_one_const), ic.item.string_value (Column_two_const), ic.item.string_value (Column_three_const), ic.item.integer_value (Column_five_const))
 				across
 					sql_query (" SELECT value_date, value, type FROM pump_data WHERE pump_fk = " + l_pk.out + " ;") as ic_data
 				loop
@@ -181,14 +181,14 @@ feature -- Basic Operations
 			end
 		end
 
-	add_new_pump_from_raw (a_tool, a_chamber, a_model: STRING; a_update_agent: PROCEDURE)
+	add_new_pump_from_raw (a_tool, a_chamber, a_model: STRING; a_status_code: INTEGER; a_update_agent: PROCEDURE)
 			-- Add a new pump from raw data to DB.
 		require
 			not_empty: not a_tool.is_empty and then
 						not a_chamber.is_empty and then
 						not a_model.is_empty
 		do
-			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model), a_update_agent)
+			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model, a_status_code), a_update_agent)
 		end
 
 	add_new_pump_data (a_data: ARRAY [EP_PUMP]; a_update_agent: PROCEDURE)
@@ -443,6 +443,7 @@ feature {NONE} -- Implementation: DB Recreation
 			factory.add_text_field ("chamber")
 			factory.add_text_field ("model")
 			factory.add_text_field ("key")
+			factory.add_boolean_field ("status")
 			factory.create_new_table (database, "pump", "pk", factory.field_array)
 
 			factory.clear_fields
@@ -500,7 +501,8 @@ feature {EP_TEST_SET_BRIDGE, TEST_SET_BRIDGE} -- Testing Ops
 							["tool", "%"" + ic.item.tool + "%""],
 							["chamber", "%"" + ic.item.chamber + "%""],
 							["model", "%"" + ic.item.model + "%""],
-							["key", "%"" + ic.item.key + "%""]
+							["key", "%"" + ic.item.key + "%""],
+							["status", ic.item.status_code.out]
 							>>
 				l_sql := l_insert.generate_insert_sql ("pump", l_fields)
 				create l_modify.make (l_sql, database)

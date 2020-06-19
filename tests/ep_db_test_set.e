@@ -51,20 +51,32 @@ feature {NONE} -- Prep
 				This means deleting it first and then recreating it
 				from scratch each time the test is run.
 				]"
-		local
---			l_file: PLAIN_TEXT_FILE
-			l_db: EP_DB
+			operational_advice: "[
+				Set the `prep_new_database' argument to True ONLY IF
+				you want to load the new-empty DB with test data!
+				]"
 		do
 			Precursor
---				-- Delete it ...
---			create l_file.make_with_name ("epump.sqlite3")
---			if l_file.exists then
---				l_file.delete
---			end
---				-- Make a new one ...
---			create l_db -- creation happens in the `default_create'.
---						-- the `make_empty_from_scratch' in `l_db' also happens!
---			l_db.load_test_data (True)
+			prep_new_database (False) -- <-- change me after you want/make structural changes to the DB tables/fields/relations.
+		end
+
+	prep_new_database (a_load_test_data: BOOLEAN)
+			-- Prepare a new database.
+		local
+			l_db: EP_DB
+			l_file: PLAIN_TEXT_FILE
+		do
+			if a_load_test_data then
+					-- Delete it ...
+				create l_file.make_with_name ("epump.sqlite3")
+				if l_file.exists then
+					l_file.delete
+				end
+					-- Make a new one ...
+				create l_db -- creation happens in the `default_create'.
+							-- the `make_empty_from_scratch' in `l_db' also happens!
+				l_db.load_test_data (a_load_test_data)
+			end
 		end
 
 feature -- Test routines
@@ -90,10 +102,10 @@ feature -- Test routines
 		do
 			create l_db
 
-			create l_pump.make ("CFAMT04X", "DTLR", "iQ40")
+			create l_pump.make ("CFAMT04X", "DTLR", "iQ40", 1)
 			assert_booleans_equal ("is_pump_in_db_real", True, l_db.is_pump_in_db (l_pump))
 
-			create l_pump.make ("BLAH", "DTLR", "iQ40")
+			create l_pump.make ("BLAH", "DTLR", "iQ40", 1)
 			assert_booleans_equal ("is_pump_in_db_blah", False, l_db.is_pump_in_db (l_pump))
 
 		end
@@ -108,7 +120,7 @@ feature -- Test routines
 		do
 			create l_db
 
-			create l_pump.make ("CFAMT04X", "DTLR", "iQ40")
+			create l_pump.make ("CFAMT04X", "DTLR", "iQ40", 1)
 			l_db.add_new_pump (l_pump, agent do_nothing)
 		end
 
@@ -122,7 +134,7 @@ feature -- Test routines
 		do
 			create l_db
 
-			create l_pump.make ("tool", "chamber", "model")
+			create l_pump.make ("tool", "chamber", "model", 1)
 			l_db.add_new_pump (l_pump, agent do_nothing)
 			l_db.delete_pump_with_data (l_pump, agent do_nothing)
 		end

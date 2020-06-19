@@ -21,7 +21,7 @@ feature -- Test routines
 			l_item: EP_PUMP
 			l_data: EP_TEST_DATA
 		do
-			create l_item.make ("tool", "chamber", "model")
+			create l_item.make ("tool", "chamber", "model", 1)
 			assert_strings_equal ("key", "tool-chamber-model", l_item.key)
 
 			create l_data

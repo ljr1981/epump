@@ -38,6 +38,9 @@ feature -- Constants
 	Column_four_const: NATURAL_32 = 4
 			-- Representing notion of fourth column.
 
+	Column_five_const: NATURAL_32 = 5
+			-- Representing notion of fifth column.
+
 	No_pumps: INTEGER = 0
 			-- Representing notion of `no_pumps'.
 

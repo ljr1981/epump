@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool, a_chamber, a_model: like key)
+	make (a_tool, a_chamber, a_model: like key; a_status_code: INTEGER)
 			-- Initialize from `a_tool', `a_chamber', and `a_model'.
 		require
 			has_data: not a_tool.is_empty and then
@@ -28,21 +28,23 @@ feature {NONE} -- Initialization
 			tool := a_tool
 			chamber := a_chamber
 			model := a_model
+			status_code := a_status_code
 		ensure
 			tool_set: tool.same_string (a_tool)
 			chamber_set: chamber.same_string (a_chamber)
 			model_set: model.same_string (a_model)
+			status_set: status_code = a_status_code
 		end
 
 	make_from_delimited_string (a_data: STRING)
 			-- Initialize from a comma-delimited string of 3 items.
 		require
-			valid_delimited_list: a_data.occurrences (',') = 2
+			valid_delimited_list: a_data.occurrences (',') = 3
 		do
 			check attached {LIST [STRING]} a_data.split (',') as al_list and then
-						al_list.count = 3
+						al_list.count = 4
 				then
-					make (al_list [1], al_list [2], al_list [3])
+					make (al_list [1], al_list [2], al_list [3], al_list [4].to_integer)
 				end
 		end
 
