@@ -7,6 +7,10 @@ class
 inherit
 	EP_WIDGET [EV_GRID_EXT]
 
+	EV_STOCK_COLORS_EXT
+
+	EP_CONSTANTS
+
 create
 	make_with_pumps
 
@@ -30,7 +34,7 @@ feature {NONE} -- Initialization
 			l_factory.set_target_grid (l_factory.grid_ext)
 			widget := l_factory.attached_target_grid
 
-			widget.set_minimum_size (575, 500)
+			widget.set_minimum_size (640, 500)
 
 				-- Load Pump data to GUI
 			across
@@ -63,6 +67,19 @@ feature {NONE} -- Initialization
 					l_factory.set_grid_label_with_width (al_date.out, 8, i, 65)
 				else
 					l_factory.set_grid_label_with_width ("n/a", 8, i, 65)
+				end
+					-- Status
+				l_factory.set_grid_label_with_width (ic.item.status_message, 9, i, 95)
+				inspect
+					ic.item.status_code
+				when In_service_code then
+					l_factory.attached_last_item.set_foreground_color (Green)
+				when Out_of_service_code then
+					l_factory.attached_last_item.set_foreground_color (Red)
+				when In_repair_code then
+					l_factory.attached_last_item.set_foreground_color (Blue)
+				else
+					do_nothing -- black is fine otherwise
 				end
 
 				i := i + 1
