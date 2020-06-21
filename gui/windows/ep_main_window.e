@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EP Main Window"
 	preliminary_design: "See end of class notes"
 
@@ -67,6 +67,18 @@ feature {NONE} -- Initialization
 
 	initialize_preferences
 			-- Initialize the preferences of Current.
+		note
+			design: "[
+				The most important line is the `log_info' call. Why?
+				The log info call reaches out to get the `log_level'
+				as set in the preferences and ensures it endures throughout
+				the applications life.
+				
+				Otherwise—be sure to set up as many application-wide
+				preferences as you need to at this level. You can read
+				and utilize preferences at any time, but this is the
+				place to initialize them!
+				]"
 		do
 			if attached {INTEGER_PREFERENCE} prefs.get_preference ("debug.log_level") as al_log_level then
 				set_log_level (al_log_level.value)
