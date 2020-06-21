@@ -20,10 +20,43 @@ feature -- Access
 
 	logger: LOG_LOGGING_FACILITY
 			-- Logger for system
-		attribute
+		once
 			create Result.make
 			Result.enable_default_file_log
-			Result.default_log_writer_file.enable_debug_log_level
+			-- UNKNO < EMERG < ALERT < CRIT < ERROR < WARN < NOTIC < INFO < DEBUG
+			inspect
+				log_level
+			when 1 then -- EMERG
+				Result.default_log_writer_file.enable_emergency_log_level
+			when 2 then -- ALERT
+				Result.default_log_writer_file.enable_alert_log_level
+			when 3 then -- CRIT
+				Result.default_log_writer_file.enable_critical_log_level
+			when 4 then -- ERROR
+				Result.default_log_writer_file.enable_error_log_level
+			when 5 then -- WARN
+				Result.default_log_writer_file.enable_warning_log_level
+			when 6 then -- NOTIC
+				Result.default_log_writer_file.enable_notice_log_level
+			when 7 then -- INFO
+				Result.default_log_writer_file.enable_information_log_level
+			when 8 then -- DEBUG
+				Result.default_log_writer_file.enable_debug_log_level
+			else -- revert to error level
+				Result.default_log_writer_file.enable_error_log_level
+			end
+
+		end
+
+	log_level: INTEGER
+			-- Log level as set from Preferences.
+
+	set_log_level (i: like log_level)
+			-- Set `log_level' to `i'
+		do
+			log_level := i
+		ensure
+			set: log_level = i
 		end
 
 	log_debug (a_parent: ANY; a_message: STRING)

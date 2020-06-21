@@ -13,6 +13,12 @@ inherit
 			initialize
 		end
 
+	EP_ANY
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make_with_title
 
@@ -33,6 +39,10 @@ feature {NONE} -- Initialization
 				is_in_default_state: is_in_default_state
 				]"
 		do
+			if attached {INTEGER_PREFERENCE} prefs.get_preference ("debug.log_level") as al_log_level then
+				set_log_level (al_log_level.value)
+			end
+			log_info (create {ANY}, "start_up")
 			Precursor (a_title)
 			set_menu_bar (create {EP_MAIN_MENU_BAR}.make (Current))
 		end
@@ -77,6 +87,7 @@ feature -- Access
 				-- debug.log_level
 			l_manager := prefs.new_manager ("debug")
 			l_log_level_pref := l_factory.new_integer_preference_value (l_manager, "debug.log_level", 7)
+			l_log_level_pref.set_description ("1 EMERG < 2 ALERT < 3 CRIT < 4 ERROR < 5 WARN < 6 NOTIC < 7 INFO < 8 DEBUG")
 			Result.save_preference (l_log_level_pref)
 
 			Result.set_save_defaults (True)
