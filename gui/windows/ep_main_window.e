@@ -39,10 +39,7 @@ feature {NONE} -- Initialization
 				is_in_default_state: is_in_default_state
 				]"
 		do
-			if attached {INTEGER_PREFERENCE} prefs.get_preference ("debug.log_level") as al_log_level then
-				set_log_level (al_log_level.value)
-			end
-			log_info (create {ANY}, "start_up")
+			initialize_preferences
 			Precursor (a_title)
 			set_menu_bar (create {EP_MAIN_MENU_BAR}.make (Current))
 		end
@@ -66,6 +63,16 @@ feature {NONE} -- Initialization
 			main_box.extend (pump_grid.widget)
 			set_icon_pixmap ( (create {IMG_DOCUMENTATION}.make).to_pixmap )
 
+		end
+
+	initialize_preferences
+			-- Initialize the preferences of Current.
+		do
+			if attached {INTEGER_PREFERENCE} prefs.get_preference ("debug.log_level") as al_log_level then
+				set_log_level (al_log_level.value)
+			end
+			log_info (create {ANY}, "start_up") -- Logging startup ensure that the `logger'
+												-- gets the right log_level.
 		end
 
 feature -- Access
