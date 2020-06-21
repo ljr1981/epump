@@ -16,4 +16,26 @@ inherit
 
 	EP_CONSTANTS
 
+feature -- Access
+
+	logger: LOG_LOGGING_FACILITY
+			-- Logger for system
+		attribute
+			create Result.make
+			Result.enable_default_file_log
+			Result.default_log_writer_file.enable_debug_log_level
+		end
+
+	log_debug (a_parent: ANY; a_message: STRING)
+			--
+		do
+			logger.write_debug ("{" + a_parent.generating_type + "}%T" + a_message)
+		end
+
+	log_info (a_parent: ANY; a_message: STRING)
+			--
+		do
+			logger.write_information ("{" + a_parent.generating_type + "}%T" + a_message)
+		end
+
 end

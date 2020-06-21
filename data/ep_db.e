@@ -27,6 +27,8 @@ feature {NONE} -- Initialize
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
+			log_debug (Current, "default_create")
+
 			create factory
 			create_db_path
 			database.do_nothing -- create fresh, if needed
@@ -43,12 +45,14 @@ feature -- Queries
 			-- How many pumps in our DB?
 		do
 			Result := sql_query_integer (" SELECT COUNT(pk) FROM pump; ")
+			log_debug (Current, "pump_count=" + Result.out)
 		end
 
 	has_pumps: BOOLEAN
 			-- Do we have pumps in DB?
 		do
 			Result := pump_count > No_pumps
+			log_debug (Current, "has_pumps=" + Result.out)
 		end
 
 	is_pump_in_db (a_pump: EP_PUMP): BOOLEAN
@@ -58,6 +62,8 @@ feature -- Queries
 			l_modify: SQLITE_MODIFY_STATEMENT
 		do
 			l_sql := "SELECT COUNT(*) FROM pump WHERE key='" + a_pump.key + "';"
+			log_debug (Current, "is_pump_in_db l_sql=" + l_sql)
+
 			create l_modify.make (l_sql, database)
 			check compiled: l_modify.is_compiled end
 			across
@@ -65,6 +71,7 @@ feature -- Queries
 			loop
 				Result := ic.item.integer_value (Column_one_const) = (True).to_integer
 			end
+			log_debug (Current, "is_pump_in_db=" + Result.out)
 		end
 
 	pump_has_data (a_pump: EP_PUMP): BOOLEAN
@@ -76,6 +83,8 @@ feature -- Queries
 			l_modify: SQLITE_MODIFY_STATEMENT
 		do
 			l_sql := " SELECT COUNT(*) FROM pump_data WHERE pump_fk = " + pump_pk (a_pump).out + " ;"
+			log_debug (Current, "pump_has_data l_sql=" + l_sql)
+
 			create l_modify.make (l_sql, database)
 			check compiled: l_modify.is_compiled end
 			across
@@ -83,6 +92,7 @@ feature -- Queries
 			loop
 				Result := ic.item.integer_value (Column_one_const) > No_pumps
 			end
+			log_debug (Current, "pump_has_data=" + Result.out)
 		ensure
 			still_has_pump: is_pump_in_db (a_pump)
 		end
@@ -91,6 +101,7 @@ feature -- Queries
 			-- A list of pump primary keys.
 		do
 			Result := sql_query_integer_list (" SELECT pk FROM pump ;")
+			log_debug (Current, "pump_pk_list Result.count=" + Result.count.out)
 		end
 
 feature -- SQL Queries
@@ -98,13 +109,17 @@ feature -- SQL Queries
 	sql_query_boolean (a_sql: STRING): BOOLEAN
 			-- A `sql_query' returning one BOOLEAN value
 		do
+			log_debug (Current, "sql_query_boolean a_sql=" + a_sql)
 			Result := sql_query (a_sql).item.boolean_value (Column_one_const)
+			log_debug (Current, "sql_query_boolean Result=" + Result.out)
 		end
 
 	sql_query_integer (a_sql: STRING): INTEGER
 			-- A `sql_query' returning one INTEGER value.
 		do
+			log_debug (Current, "sql_query_integer a_sql=" + a_sql)
 			Result := sql_query (a_sql).item.integer_value (Column_one_const)
+			log_debug (Current, "sql_query_integer Result=" + Result.out)
 		end
 
 	sql_query_integer_list (a_sql: STRING): ARRAYED_LIST [INTEGER]
@@ -113,12 +128,14 @@ feature -- SQL Queries
 			l_sql: STRING
 			l_modify: SQLITE_MODIFY_STATEMENT
 		do
+			log_debug (Current, "sql_query_integer_list a_sql=" + a_sql)
 			create Result.make (100)
 			across
 				sql_query (a_sql) as ic
 			loop
 				Result.force (ic.item.integer_value (Column_one_const))
 			end
+			log_debug (Current, "sql_query_integer_list Result.count=" + Result.count.out)
 		end
 
 feature -- Basic Operations
@@ -148,6 +165,7 @@ feature -- Basic Operations
 				end
 				Result.force (l_pump)
 			end
+			log_debug (Current, "all_pumps Result.count=" + Result.count.out)
 		end
 
 		-- pump_by_pk
@@ -175,6 +193,7 @@ feature -- Basic Operations
 							"%"" + a_pump.chamber + "%"," +
 							"%"" + a_pump.model + "%"," +
 							"%"" + a_pump.key + "%") ; "
+				log_debug (Current, "add_new_pump l_sql=" + l_sql)
 				create l_modify.make (l_sql, database)
 				check compiled: l_modify.is_compiled end
 				l_modify.execute
@@ -188,12 +207,14 @@ feature -- Basic Operations
 						not a_chamber.is_empty and then
 						not a_model.is_empty
 		do
+			log_debug (Current, "add_new_pump_from_raw a_tool=" + a_tool+ " a_chamber=" + a_chamber + " a_model=" + a_model + " a_status_code=" + a_status_code.out)
 			add_new_pump (create {EP_PUMP}.make (a_tool, a_chamber, a_model, a_status_code), a_update_agent)
 		end
 
 	add_new_pump_data (a_data: ARRAY [EP_PUMP]; a_update_agent: PROCEDURE)
 			-- Add a new pump_data from a_data list of Pumps.
 		do
+			log_debug (Current, "add_new_pump_data a_data.count=" + a_data.count.out)
 			across
 				a_data as ic_data
 			loop
@@ -214,7 +235,7 @@ feature -- Basic Operations
 						"%"<<VALUE_DATE>>%"," +
 						"%"<<VALUE>>%"," +
 						"%"<<TYPE>>%" ) ; "
-
+			log_debug (Current, "add_new_pump_datum a_pump.key=" + a_pump.key)
 			across
 				a_pump.exhaust_data as ic_exhaust
 			loop
@@ -255,6 +276,7 @@ feature -- Basic Operations
 			l_fk_list: ARRAYED_LIST [INTEGER]
 		do
 			l_pk := pump_pk (a_pump)
+			log_debug (Current, "delete_pump_with_data l_pk=" + l_pk.out)
 			check has_pump: l_pk > 0 end
 			if l_pk > 0 then
 					-- locate the pump-data by `l_pk' and delete it
@@ -282,6 +304,7 @@ feature -- Basic Operations
 			l_modify: SQLITE_MODIFY_STATEMENT
 		do
 			l_sql := " SELECT pk FROM pump WHERE key= '" + a_pump.key + "' ;"
+			log_debug (Current, "pump_pk l_sql=" + l_sql)
 			create l_modify.make (l_sql, database)
 			check compiled: l_modify.is_compiled end
 			across
@@ -289,6 +312,7 @@ feature -- Basic Operations
 			loop
 				Result := ic.item.integer_value (Column_one_const)
 			end
+			log_debug (Current, "pump_pk Result=" + Result.out)
 		end
 
 	export_all_pumps_to_xml (a_file_name: STRING)
@@ -303,6 +327,7 @@ feature -- Basic Operations
 			l_element_xml,
 			l_data_elements_replacement: STRING
 		do
+			log_debug (Current, "export_all_pumps_to_xml a_file_name=" + a_file_name)
 			across
 				all_pumps as ic_pumps
 			from
@@ -410,6 +435,7 @@ feature {NONE} -- Implementation: SQL Command & Query
 			-- Perform a `sql_command' using `a_sql' statement,
 			--	where there is not return result.
 		do
+			log_debug (Current, "sql_command a_sql=" + a_sql)
 			sql_query (a_sql).do_nothing
 		end
 
@@ -417,6 +443,7 @@ feature {NONE} -- Implementation: SQL Command & Query
 			-- Perform a `sql_query' using `a_sql' statement,
 			--	returning an iteration cursor result.
 		do
+			log_debug (Current, "sql_query a_sql=" + a_sql)
 			Result := (create {SQLITE_MODIFY_STATEMENT}.make (a_sql, database)).execute_new
 		end
 
@@ -429,6 +456,7 @@ feature {NONE} -- Implementation: DB Recreation
 		local
 			l_modify: SQLITE_MODIFY_STATEMENT
 		do
+			log_debug (Current, "make_empty_from_scratch")
 				-- Ensure our tables are gone first
 			create l_modify.make (" DROP TABLE IF EXISTS pump; ", database)
 			l_modify.execute
@@ -488,6 +516,7 @@ feature {EP_TEST_SET_BRIDGE, TEST_SET_BRIDGE} -- Testing Ops
 			l_sql: STRING
 			i,j: INTEGER
 		do
+			log_debug (Current, "load_test_data")
 				-- Load Pump test data
 			create l_data
 

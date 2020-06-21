@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			extend (file)
 			file.extend (file_new (a_window))
 			file.extend (create {EV_MENU_SEPARATOR})
+			file.extend (File_preferences (a_window))
+			file.extend (create {EV_MENU_SEPARATOR})
 			file.extend (file_exit (a_window))
 		end
 
@@ -54,6 +56,12 @@ feature -- Menu Elements
 			create Result.make_with_text_and_action ("&New", agent on_file_new_click (a_window))
 		end
 
+	file_preferences (a_window: EP_MAIN_WINDOW): EV_MENU_ITEM
+			--
+		once
+			create Result.make_with_text_and_action ("&Preferences", agent on_file_preferences (a_window))
+		end
+
 feature -- Event Operations
 
 	on_file_exit_click (a_window: EP_MAIN_WINDOW)
@@ -69,6 +77,15 @@ feature -- Event Operations
 		do
 			create l_new_pumps.make_with_title ("Add new pumps")
 			l_new_pumps.show_relative_to_window (a_window)
+		end
+
+	on_file_preferences (a_window: EP_MAIN_WINDOW)
+			-- What happens when the File -> Preferences menu itme is clicked?
+		local
+			l_pref_window: PREFERENCES_WINDOW
+		do
+			create l_pref_window.make (a_window.prefs, a_window)
+			l_pref_window.show
 		end
 
 end

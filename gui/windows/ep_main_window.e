@@ -58,6 +58,31 @@ feature {NONE} -- Initialization
 
 		end
 
+feature -- Access
+
+	prefs: PREFERENCES
+			-- The preferences for Current Application
+		local
+			l_storage: PREFERENCES_STORAGE_XML
+				-- Factory & Manager(s)
+			l_factory: GRAPHICAL_PREFERENCE_FACTORY		-- Factory to create Prefs for Mgrs
+			l_manager: PREFERENCE_MANAGER				-- A Manager responsible for each pref domain
+
+			l_log_level_pref: INTEGER_PREFERENCE
+		once
+			create l_storage.make_with_location ("epump.conf")
+			create Result.make_with_defaults_and_storage (<<"defaults.conf">>, l_storage)
+			create l_factory
+
+				-- debug.log_level
+			l_manager := prefs.new_manager ("debug")
+			l_log_level_pref := l_factory.new_integer_preference_value (l_manager, "debug.log_level", 7)
+			Result.save_preference (l_log_level_pref)
+
+			Result.set_save_defaults (True)
+			Result.save_preferences
+		end
+
 feature {NONE} -- Widgets
 
 	main_box: EV_VERTICAL_BOX
