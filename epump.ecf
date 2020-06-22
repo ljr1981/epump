@@ -15,6 +15,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
+		<library name="mask" location="$GitHub\masking_library\mask\mask.ecf"/>
 		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
 		<library name="sqlite_ext" location="$GITHUB\sqlite_ext\sqlite_ext.ecf"/>
