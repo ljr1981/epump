@@ -39,10 +39,10 @@ feature -- Simple Inputs
 		do
 			create l_item
 
-			l_item.extend (text_input ("Serial No").box)
-			l_item.extend (text_input ("Tool").box)
-			l_item.extend (text_input ("Chamber").box)
-			l_item.extend (text_input ("Model").box)
+			l_item.extend (masked_foced_upper_case_text ("Serial No").box)
+			l_item.extend (masked_foced_upper_case_text ("Tool").box)
+			l_item.extend (masked_foced_upper_case_text ("Chamber").box)
+			l_item.extend (masked_foced_upper_case_text ("Model").box)
 
 				-- Setup and Demo
 			show_me := True
@@ -51,8 +51,17 @@ feature -- Simple Inputs
 
 feature  {NONE} -- Implementation: Simple Inputs Support
 
-	text_input (a_text: STRING): MASKED_STRING_FIELD
+	masked_foced_upper_case_text (a_text: STRING): MASKED_STRING_FIELD
 			-- A text field input box with label.
+		note
+			design: "[
+				We have a choice. We can do all this repetitive
+				work in the Client or we can do it here (i.e.
+				we can do the set_focus_in task).
+				
+				For now, I am choosing to build this Query routine
+				to do all the work.
+				]"
 		do
 			create Result.make_with_caption_and_repeating_pattern (a_text + ": ", '!', "")
 			Result.set_select_on_focus_in
