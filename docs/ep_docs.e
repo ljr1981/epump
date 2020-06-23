@@ -11,6 +11,7 @@ note
 			Data_tier				-- Where everything data is handled.
 			Business_tier			-- Where all non-GUI and non-data computation and logic is at.
 			Presentation_tier		-- Where all GUI-presentation components are at.
+			Libraries				-- Libraries of code for specific purposes.
 			
 		----------- Tier Stuff ----------------
 		
@@ -61,6 +62,29 @@ note
 			{EV_GRID_EXT}			-- An enhancement of the {EV_GRID} component.
 			{EV_STOCK_COLORS_EXT}	-- A class with lots of different "colors" by name.
 										(so we don't have to make colors based on RGB values only)
+		
+		------------- Library Dependencies --------------
+		
+		Libraries ::=
+			Data_libraries			-- Libraries dedicated to working with data/databases/repositories.
+			Business_libraries		-- Libraries dedicated to processing.
+			GUI_libraries			-- Libraries dedicated to GUI presenations.
+			
+		Data_libraries ::=
+			Sqlite					-- Allows working with SQLite-3 databases.
+			Sqlite_ext				-- Enhancements to Sqlite library.
+			
+		Business_libraries ::=
+			base					-- All base structures (e.g. arrays, lists, math functions, etc.).
+			diff					-- Computing of differences between things (e.g. like strings).
+			preferences				-- System-wide preferences and their storage in XML (conf) files.
+			testing					-- Classes used by AutoTest for writing *_TEST_SET classes.
+			time					-- Date, Time, and Data-time related data and computations.
+		
+		GUI_libraries ::=
+			mask					-- Applies "masking" to Vision2 {EV_TEXT_FIELD} classes.
+			vision2					-- Stanard Windows/Linux GUI components and supporting classes.
+			vision2_extension		-- Enhancements to Vision2.
 
 		]"
 
