@@ -20,6 +20,7 @@
 		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
 		<library name="sqlite_ext" location="$GITHUB\sqlite_ext\sqlite_ext.ecf"/>
+		<library name="svg_graph" location="$GitHub\svg_graph\svg_graph.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>

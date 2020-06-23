@@ -69,6 +69,7 @@ note
 			Data_libraries			-- Libraries dedicated to working with data/databases/repositories.
 			Business_libraries		-- Libraries dedicated to processing.
 			GUI_libraries			-- Libraries dedicated to GUI presenations.
+			In_progress_libraries	-- Libraries currently in-progress of design/implement/test/deliver.
 			
 		Data_libraries ::=
 			Sqlite					-- Allows working with SQLite-3 databases.
@@ -85,7 +86,39 @@ note
 			mask					-- Applies "masking" to Vision2 {EV_TEXT_FIELD} classes.
 			vision2					-- Stanard Windows/Linux GUI components and supporting classes.
 			vision2_extension		-- Enhancements to Vision2.
+			
+		In_progress_libraries ::=
+			svg_graph				-- A generic/common SVG graphing/drawing library.
+										(* Generate SVG vector drawings, graphs, reports, and generate
+											PNG files from the SVG).
 
 		]"
+	items_to_do: "[
+		TO DO LIST
+		==========
+		Import_export ::=
+			Json_import_export		-- Import/Export of data to/from JSON.
+			CSV_import_export		-- Import/Export of data to/from CSV.
+			XML_import				-- Import of data from XML.
+		
+		Data_entry ::=
+			Pump_inserting			-- Inserting new (unique) pumps into DB.
+			Pump_updating			-- Updating existing pumps in DB.
+			Pump_archiving			-- Archive and restore existing pumps to archival DB.
+			Pump_deleting			-- Deletion (permanent) of Archived pumps.
+
+		Facilities ::=
+			Log viewer				-- GUI Log Viewer w/clearing & filtering.
+			Log_clearer				-- Facility to clear system.log file (completely).
+			Log_filterer			-- Facility to remove certain log items from system.log (permanent).
+			Email_faclities			-- Email facilities for standard emails and emails w/attachments.
+			SVG_facilities			-- Facility to create various SVG vector drawings (i.e. charts, etc).
+
+		Reports ::=
+			Pump_evaluator_GUI		-- GUI facility over {EP_EVALUATOR}.
+			Evaluation_reports		-- Report(s) based on {EP_EVALUATOR} results.
+			Data_graphs_reports		-- SVG-based reports.
+		]"
+
 
 end
