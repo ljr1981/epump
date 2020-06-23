@@ -43,9 +43,10 @@ feature -- Simple Inputs
 			l_item.extend (masked_foced_upper_case_text ("Tool").box)
 			l_item.extend (masked_foced_upper_case_text ("Chamber").box)
 			l_item.extend (masked_foced_upper_case_text ("Model").box)
+			l_item.extend (status_combo)
 
 				-- Setup and Demo
-			show_me := True
+			show_me := False
 			demonstrate_widget (l_item)
 		end
 
@@ -65,6 +66,26 @@ feature  {NONE} -- Implementation: Simple Inputs Support
 		do
 			create Result.make_with_caption_and_repeating_pattern (a_text + ": ", '!', "")
 			Result.set_select_on_focus_in
+		end
+
+	status_combo: EV_HORIZONTAL_BOX
+			--
+		local
+			l_combo: EV_COMBO_BOX
+			l_constants: EP_CONSTANTS
+			l_hbox: EV_HORIZONTAL_BOX
+			l_label: EV_LABEL
+		do
+			create l_label.make_with_text ("Status: ")
+			l_label.align_text_left
+			create l_constants
+			create l_combo.make_with_strings (l_constants.Service_statuses)
+			l_combo.disable_edit
+			create Result
+			Result.extend (l_label)
+			Result.extend (l_combo)
+			Result.set_padding (3)
+			Result.set_border_width (3)
 		end
 
 end

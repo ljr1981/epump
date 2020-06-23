@@ -188,10 +188,11 @@ feature -- Basic Operations
 			if is_pump_in_db (a_pump) then
 				do_nothing -- swallow it and "create silently"
 			else
-				l_sql := " INSERT INTO pump (tool, chamber, model, key) VALUES (" +
+				l_sql := " INSERT INTO pump (tool, chamber, model, status, key) VALUES (" +
 							"%"" + a_pump.tool + "%"," +
 							"%"" + a_pump.chamber + "%"," +
 							"%"" + a_pump.model + "%"," +
+							a_pump.status_code.out + "," +
 							"%"" + a_pump.key + "%") ; "
 				log_debug (Current, "add_new_pump l_sql=" + l_sql)
 				create l_modify.make (l_sql, database)
@@ -339,6 +340,7 @@ feature -- Basic Operations
 				l_pump_xml.replace_substring_all ("<<CHAMBER>>", ic_pumps.item.chamber)
 				l_pump_xml.replace_substring_all ("<<MODEL>>", ic_pumps.item.model)
 				l_pump_xml.replace_substring_all ("<<KEY>>", ic_pumps.item.key)
+				l_pump_xml.replace_substring_all ("<<STATUS>>", ic_pumps.item.status_code.out)
 					-- Exhaust data
 				across
 					ic_pumps.item.exhaust_data as ic_exhaust_data
@@ -398,7 +400,7 @@ feature -- Basic Operations
 ]"
 
 	xml_pump_template: STRING = "[
-	<pump tool='<<TOOL>>' chamber='<<CHAMBER>>' model=<<MODEL>> key='<<KEY>>'>
+	<pump tool='<<TOOL>>' chamber='<<CHAMBER>>' model=<<MODEL>> key='<<KEY>>' status=<<STATUS>>>
 		<<EXHAUST_DATA>>
 		<<TEMPERATURE_DATA>>
 	</pump>
