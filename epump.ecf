@@ -2,6 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="epump" uuid="3D9878AF-48C0-691B-9E04-000056A736DA" readonly="false">
 	<description>epump implementation</description>
 	<target name="epump">
+		<description>The primary application for EXE distribution</description>
 		<root class="EP_APP" feature="make"/>
 		<option warning="warning" syntax="provisional" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
@@ -23,6 +24,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
 		<cluster name="epump" location=".\" recursive="true">
+			<description>System Classes</description>
 			<file_rule>
 				<exclude>/.git$</exclude>
 				<exclude>/.svn$</exclude>
