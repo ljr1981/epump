@@ -115,7 +115,7 @@ note
 		Import_export ::=
 			Json_import_export		-- (#3) Import/Export of data to/from JSON.
 			CSV_import_export		-- (#3) Import/Export of data to/from CSV.
-			XML_import				-- (#1) Import of data from XML.
+			XML_import				-- (#2) Import of data from XML.
 		
 		Data_entry ::=
 			Pump_inserting			-- (#1) Inserting new (unique) pumps into DB.
