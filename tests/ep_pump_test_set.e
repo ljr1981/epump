@@ -1,10 +1,5 @@
 note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
-	author: "EiffelStudio test wizard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Tests of {EP_PUMP}"
 	testing: "type/manual"
 
 class

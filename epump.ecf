@@ -36,6 +36,7 @@
 				<exclude>tests</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="svg" location="$Github\svg\src\" recursive="true"/>
 	</target>
 	<target name="gui_test" extends="epump">
 		<description>epump GUI Tests</description>
