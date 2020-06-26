@@ -23,7 +23,8 @@ feature -- Test routines
 			l_pump_status: EP_PUMP_STATUS_FLD
 		do
 			create l_pump_pk
-			
+			l_pump_pk.add_where_between (False, 1, 20, Void)
+			assert_strings_equal ("where_between_1_20", "", l_pump_pk.where_out)
 
 			create l_pump_tool
 			create l_pump_chamber
