@@ -21,18 +21,23 @@ feature -- Test routines
 			l_pump_model: EP_PUMP_MODEL_FLD
 			l_pump_key: EP_PUMP_KEY_FLD
 			l_pump_status: EP_PUMP_STATUS_FLD
+			l_pump: EP_PUMP_TABLE
 		do
 			create l_pump_pk
-			l_pump_pk.add_where_lt (False, 20, "AND")
-			assert_strings_equal ("where_lt", "pk < 20 AND ", l_pump_pk.where_out)
+			l_pump_pk.add_where_lt (False, 20, "OR")
+			assert_strings_equal ("where_lt", "pk < 20 OR ", l_pump_pk.where_out)
 			l_pump_pk.add_where_between (False, 1, 20, Void)
-			assert_strings_equal ("where_between_1_20", "pk < 20 AND pk BETWEEN 1 AND 20", l_pump_pk.where_out)
+			assert_strings_equal ("where_between_1_20", "pk < 20 OR pk BETWEEN 1 AND 20", l_pump_pk.where_out)
 
 			create l_pump_tool
 			create l_pump_chamber
 			create l_pump_model
 			create l_pump_key
 			create l_pump_status
+
+			create l_pump
+			l_pump.add_fields (<<l_pump_pk, l_pump_tool, l_pump_chamber, l_pump_model, l_pump_key, l_pump_status>>)
+			assert_strings_equal ("select_sql", " SELECT pk, tool, chamber, model, key, status FROM pump WHERE pk < 20 OR pk BETWEEN 1 AND 20;", l_pump.select_sql_statement)
 		end
 
 	mock_field_tests
@@ -51,5 +56,5 @@ feature -- Test routines
 			l_char.add_where_equal (False, "X", Void)
 			assert_strings_equal ("where_equal", "mock_character = 'X'", l_char.where_out)
 		end
-		
+
 end
