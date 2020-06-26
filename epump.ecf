@@ -21,9 +21,11 @@
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
 		<library name="mask" location="$GitHub\masking_library\mask\mask.ecf"/>
 		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf"/>
+		<library name="randomizer" location="$GitHub\randomizer\randomizer.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
 		<library name="sqlite_ext" location="$GITHUB\sqlite_ext\sqlite_ext.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
 		<cluster name="epump" location=".\" recursive="true">
@@ -36,6 +38,7 @@
 				<exclude>tests</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="pub_sub" location="$GitHub\pub_sub\src\" recursive="true"/>
 		<cluster name="svg" location="$Github\svg\src\" recursive="true"/>
 	</target>
 	<target name="gui_test" extends="epump">
