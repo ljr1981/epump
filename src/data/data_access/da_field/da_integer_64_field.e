@@ -46,4 +46,10 @@ feature -- Output
 			end
 		end
 
+	formatted_value_out (a_value: attached like sqlite_bind_arg_value_anchor): STRING
+			--<Precursor>
+		do
+			Result := a_value.out
+		end
+
 end
