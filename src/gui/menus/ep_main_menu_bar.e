@@ -82,10 +82,10 @@ feature -- Event Operations
 	on_file_preferences (a_window: EP_MAIN_WINDOW)
 			-- What happens when the File -> Preferences menu itme is clicked?
 		local
-			l_pref_window: PREFERENCES_WINDOW
+			l_pref_window: PREFERENCES_GRID_DIALOG
 		do
-			create l_pref_window.make (a_window.prefs, a_window)
-			l_pref_window.show
+			create l_pref_window.make (a_window.prefs)
+			l_pref_window.show_modal_to_window (a_window)
 		end
 
 end
