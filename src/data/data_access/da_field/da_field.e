@@ -12,7 +12,21 @@ note
 			Is_auto_increment	-- As a PK field, does this key auto-increment?
 			Is_sorted			-- Is this feild sorted (ASC/DESC)?
 			Is_ascending		-- If Is_sorted, is it in ASC order?
+			
+			Where_not			-- NOT <expr>
+			Where_equal			-- <expr> = "[Field_name] = [Value]"
+			Where_lt			-- <expr> = "[Field_name] < [Value]"
+			Where_lte			-- <expr> = "[Field_name] <= [Value]"
+			Where_gt			-- <expr> = "[Field_name] > [Value]"
+			Where_gte			-- <expr> = "[Field_name] >= [Value]"
+			Where_is_not		-- <expr> = "[Field_name] IS NOT [Value]"
+			Where_like			-- <expr> = "[Field_name] LIKE [Value]" (e.g. 'Ki%')
+			Where_glob			-- <expr> = "[Field_name] GLOB [Value]" (e.g. 'Ki*')
+			Where_in			-- <expr> = "[Field_name]IN ([CSV_value_list])"
+			Where_between		-- <expr> = "[Field_name] BETWEEN [Value_lower] AND [Value_upper]"
+			Where_exists		-- <expr> = "EXISTS ([Sub_select_on_field_name])" (e.g. (SELECT AGE FROM COMPANY WHERE SALARY > 65000))
 		]"
+	EIS: "name=where", "src=https://www.tutorialspoint.com/sqlite/sqlite_where_clause.htm"
 
 deferred class
 	DA_FIELD [S -> detachable SQLITE_BIND_ARG [ANY] create make end, D -> detachable ANY]
@@ -100,5 +114,30 @@ feature -- Basic Operations
 			-- Convert `eiffel_to_sqlite'.
 		deferred
 		end
+
+feature -- Output
+
+	value_out: STRING
+			-- Output of `value' in `sqlite_bind_arg'.
+		deferred
+		end
+
+feature -- WHERE
+
+	is_where_not: BOOLEAN
+	toggle_where_not do is_where_not := not is_where_not end
+			--Where_not			-- NOT <expr>
+
+			--Where_equal			-- <expr> = "[Field_name] = [Value]"
+			--Where_lt			-- <expr> = "[Field_name] < [Value]"
+			--Where_lte			-- <expr> = "[Field_name] <= [Value]"
+			--Where_gt			-- <expr> = "[Field_name] > [Value]"
+			--Where_gte			-- <expr> = "[Field_name] >= [Value]"
+			--Where_is_not		-- <expr> = "[Field_name] IS NOT [Value]"
+			--Where_like			-- <expr> = "[Field_name] LIKE [Value]" (e.g. 'Ki%')
+			--Where_glob			-- <expr> = "[Field_name] GLOB [Value]" (e.g. 'Ki*')
+			--Where_in			-- <expr> = "[Field_name]IN ([CSV_value_list])"
+			--Where_between		-- <expr> = "[Field_name] BETWEEN [Value_lower] AND [Value_upper]"
+			--Where_exists		-- <expr> = "EXISTS ([Sub_select_on_field_name])" (e.g. (SELECT AGE FROM COMPANY WHERE SALARY > 65000))
 
 end

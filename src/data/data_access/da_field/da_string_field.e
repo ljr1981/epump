@@ -21,4 +21,21 @@ feature -- Basic Operations
 			Result := a_value
 		end
 
+feature -- Output
+
+	value_out: STRING
+			--<Precursor>
+		do
+			if
+				attached sqlite_bind_arg as al_arg and then
+				attached al_arg.value as al_value
+			then
+				Result := al_value
+			else
+				create Result.make_empty
+			end
+			Result.prepend_character ('%'')
+			Result.append_character ('%'')
+		end
+
 end
