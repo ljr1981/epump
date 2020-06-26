@@ -14,6 +14,9 @@ feature -- Access
 
 	sqlite_bind_arg: INTEGER_64
 			--<Precursor>
+		do
+			Result := Precursor
+		end
 
 feature -- Basic Operations
 

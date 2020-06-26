@@ -38,6 +38,12 @@ feature -- Test routines
 			create l_pump
 			l_pump.add_fields (<<l_pump_pk, l_pump_tool, l_pump_chamber, l_pump_model, l_pump_key, l_pump_status>>)
 			assert_strings_equal ("select_sql", " SELECT pk, tool, chamber, model, key, status FROM pump WHERE pk < 20 OR pk BETWEEN 1 AND 20;", l_pump.select_sql_statement)
+			l_pump_tool.set_value ("TOOL_NAME")
+			l_pump_chamber.set_value ("CHAMBER_NAME")
+			l_pump_model.set_value ("MODEL_NAME")
+			l_pump_key.set_value ("SERIAL_NO")
+			l_pump_status.set_value ({EP_PUMP}.In_service_code)
+			assert_strings_equal ("insert_sql", " INSERT INTO pump (tool, chamber, model, key, status) VALUES ('TOOL_NAME', 'CHAMBER_NAME', 'MODEL_NAME', 'SERIAL_NO', 1);", l_pump.insert_sql_statement)
 		end
 
 	mock_field_tests

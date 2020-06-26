@@ -72,7 +72,7 @@ feature -- Output
 		do
 			create Result.make_empty
 			Result.append_string_general (" SELECT ")
-			Result.append_string_general (fields_csv_list)
+			Result.append_string_general (fields_csv_list (False))
 			Result.append_string_general (" FROM ")
 			Result.append_string_general (name)
 			if attached where_clause as al_where_clause and then not al_where_clause.is_empty then
@@ -83,10 +83,21 @@ feature -- Output
 		end
 
 	insert_sql_statement: STRING
-			--
+			-- INSERT INTO TABLE_NAME [(column1, column2, column3,...columnN)]
+			--	VALUES (value1, value2, value3,...valueN);
+		note
+			EIS: "src=https://www.tutorialspoint.com/sqlite/sqlite_insert_query.htm"
 		do
 			create Result.make_empty
-			Result.append_string_general (" INSERT ")
+			Result.append_string_general (" INSERT INTO ")
+			Result.append_string_general (name)
+			Result.append_character (' ')
+			Result.append_character ('(')
+			Result.append_string_general (fields_csv_list (True))
+			Result.append_character (')')
+			Result.append_string_general (" VALUES (")
+			Result.append_string_general (field_values_csv_list (True))
+			Result.append_character (')')
 			Result.append_character (';')
 		end
 
@@ -117,17 +128,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fields_csv_list: STRING
+	fields_csv_list (a_exclude_pk: BOOLEAN): STRING
 			-- Build a CSV list of `fields'.
 		do
 			create Result.make_empty
 			across
 				fields as ic
 			loop
-				Result.append_string_general (ic.item.name)
-				if ic.cursor_index < fields.count then
-					Result.append_character (',')
-					Result.append_character (' ')
+				if a_exclude_pk and then ic.item.is_primary_key then
+					do_nothing
+				else
+					Result.append_string_general (ic.item.name)
+					if ic.cursor_index < fields.count then
+						Result.append_character (',')
+						Result.append_character (' ')
+					end
+				end
+			end
+		end
+
+	field_values_csv_list (a_exclude_pk: BOOLEAN): STRING
+			--
+		do
+			create Result.make_empty
+			across
+				fields as ic
+			loop
+				if a_exclude_pk and then ic.item.is_primary_key then
+					do_nothing
+				else
+					Result.append_string_general (ic.item.value_out)
+					if ic.cursor_index < fields.count then
+						Result.append_character (',')
+						Result.append_character (' ')
+					end
 				end
 			end
 		end

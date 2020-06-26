@@ -47,6 +47,11 @@ feature -- Access
 	sqlite_bind_arg: detachable S
 			-- Value Type anchor for SQLite3 Data Type.
 			-- Controlled by Generic Parameter.
+		do
+			if attached value as al_value then
+				Result := eiffel_to_sqlite (al_value)
+			end
+		end
 
 	value: detachable D
 			-- Value Type anchor for Eiffel Data Type.
@@ -101,6 +106,18 @@ feature -- Settings
 			parent_pk_field := a_fld
 		ensure
 			set: attached parent_pk_field as al_fld implies al_fld ~ a_fld
+		end
+
+	set_value (a_value: attached like value)
+			--
+		do
+			value := a_value
+		end
+
+	set_value_from_sqlite_value (a_value: attached like sqlite_bind_arg)
+			-- Set `value' from `a_value', which is a SQLite3 value.
+		do
+			value := sqlite_to_eiffel (a_value)
 		end
 
 feature -- Basic Operations
