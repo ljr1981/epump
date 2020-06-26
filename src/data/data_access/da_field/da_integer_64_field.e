@@ -5,28 +5,25 @@ deferred class
 	DA_INTEGER_64_FIELD
 
 inherit
-	DA_EXPANDED_TYPE_FIELD [SQLITE_INTEGER_ARG, INTEGER_64]
+	DA_NUMERIC_FIELD [INTEGER_64, INTEGER_64]
 		redefine
 			sqlite_bind_arg
 		end
 
 feature -- Access
 
-	sqlite_bind_arg: SQLITE_INTEGER_ARG
+	sqlite_bind_arg: INTEGER_64
 			--<Precursor>
-		attribute
-			create Result.make ("$" + name, 0)
-		end
 
 feature -- Basic Operations
 
-	sqlite_to_eiffel (a_value: like sqlite_bind_arg.value): like value
+	sqlite_to_eiffel (a_value: INTEGER_64): INTEGER_64
 			-- Convert `sqlite_to_eiffel'.
 		do
 			Result := a_value
 		end
 
-	eiffel_to_sqlite (a_value: like value): like sqlite_bind_arg.value
+	eiffel_to_sqlite (a_value: INTEGER_64): INTEGER_64
 			-- Convert `eiffel_to_sqlite'.
 		do
 			Result := a_value
@@ -37,8 +34,7 @@ feature -- Output
 	value_out: STRING
 			--<Precursor>
 		do
-			if attached sqlite_bind_arg as al_arg and then
-				attached al_arg.value as al_value
+			if attached sqlite_bind_arg as al_value
 			then
 				Result := al_value.out
 			else
@@ -46,7 +42,7 @@ feature -- Output
 			end
 		end
 
-	formatted_value_out (a_value: attached like sqlite_bind_arg_value_anchor): STRING
+	formatted_value_out (a_value: INTEGER_64): STRING
 			--<Precursor>
 		do
 			Result := a_value.out

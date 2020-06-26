@@ -29,7 +29,7 @@ note
 	EIS: "name=where", "src=https://www.tutorialspoint.com/sqlite/sqlite_where_clause.htm"
 
 deferred class
-	DA_FIELD [S -> detachable SQLITE_BIND_ARG [ANY] create make end, D -> detachable ANY]
+	DA_FIELD [S -> detachable ANY, D -> detachable ANY]
 
 feature -- Access
 
@@ -51,9 +51,6 @@ feature -- Access
 	value: detachable D
 			-- Value Type anchor for Eiffel Data Type.
 			-- Controlled by Generic Parameter.
-
-	sqlite_bind_arg_value_anchor: detachable like {S}.value
-			-- SQLite3 bind arg value type anchor.
 
 	is_primary_key: BOOLEAN
 		deferred
@@ -108,12 +105,12 @@ feature -- Settings
 
 feature -- Basic Operations
 
-	sqlite_to_eiffel (a_value: like {S}.value): D
+	sqlite_to_eiffel (a_value: S): D
 			-- Convert `sqlite_to_eiffel'.
 		deferred
 		end
 
-	eiffel_to_sqlite (a_value: like value): like {S}.value
+	eiffel_to_sqlite (a_value: like value): S
 			-- Convert `eiffel_to_sqlite'.
 		deferred
 		end
@@ -125,7 +122,7 @@ feature -- Output
 		deferred
 		end
 
-	formatted_value_out (a_value: attached like sqlite_bind_arg_value_anchor): STRING
+	formatted_value_out (a_value: detachable S): STRING
 			-- Formatted output of `a_value'.
 		deferred
 		end
@@ -154,43 +151,43 @@ feature -- WHERE
 			create Result.make (10)
 		end
 
-	add_where_equal (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_equal (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_equal			-- <expr> = "[Field_name] = [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, "=")
 		end
 
-	add_where_lt (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_lt (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_lt			-- <expr> = "[Field_name] < [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, "<")
 		end
 
-	add_where_lte (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_lte (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_lte			-- <expr> = "[Field_name] <= [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, "<=")
 		end
 
-	add_where_gt (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_gt (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_gt			-- <expr> = "[Field_name] > [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, ">")
 		end
 
-	add_where_gte (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_gte (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_gte			-- <expr> = "[Field_name] >= [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, ">=")
 		end
 
-	add_where_is_not (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_is_not (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_is_not		-- <expr> = "[Field_name] IS NOT [Value]"
 		do
 			add_where_key_oper_value (a_not, a_value, a_conjunction, "IS NOT")
 		end
 
-	add_where_key_oper_value (a_not: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING; a_oper: STRING)
+	add_where_key_oper_value (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING; a_oper: STRING)
 			-- Generically add WHERE with key operator and value (possibly notted)
 		local
 			l_expr: STRING
@@ -207,7 +204,7 @@ feature -- WHERE
 
 feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 
-	add_where_like (a_not, a_starts_like, a_ends_like: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_like (a_not, a_starts_like, a_ends_like: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_like			-- <expr> = "[Field_name] LIKE [Value]" (e.g. 'Ki%')
 		local
 			l_expr: STRING
@@ -228,7 +225,7 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 			add_expression (l_expr, a_conjunction)
 		end
 
-	add_where_glob (a_not, a_starts_like, a_ends_like: BOOLEAN; a_value: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_glob (a_not, a_starts_like, a_ends_like: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_glob			-- <expr> = "[Field_name] GLOB [Value]" (e.g. 'Ki*')
 		local
 			l_expr: STRING
@@ -249,7 +246,7 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 			add_expression (l_expr, a_conjunction)
 		end
 
-	add_where_in (a_not: BOOLEAN; a_value_list: ARRAY [attached like sqlite_bind_arg_value_anchor]; a_conjunction: detachable STRING)
+	add_where_in (a_not: BOOLEAN; a_value_list: ARRAY [S]; a_conjunction: detachable STRING)
 			--Where_in			-- <expr> = "[Field_name]IN ([CSV_value_list])"
 		local
 			l_expr: STRING
@@ -272,7 +269,7 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 			add_expression (l_expr, a_conjunction)
 		end
 
-	add_where_between (a_not: BOOLEAN; a_lb, a_nb: attached like sqlite_bind_arg_value_anchor; a_conjunction: detachable STRING)
+	add_where_between (a_not: BOOLEAN; a_lb, a_nb: detachable S; a_conjunction: detachable STRING)
 			--Where_between		-- <expr> = "[Field_name] BETWEEN [Value_lower] AND [Value_upper]"
 		local
 			l_expr: STRING
@@ -297,14 +294,8 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 
 	add_expression (a_expr: STRING; a_conjunction: detachable STRING)
 			-- Add `a_expr' to `where_expressions'
-		require
-			unique_expr: not where_expressions.has ([a_expr, a_conjunction])
-			valid_conjunction: attached a_conjunction as al_conjunction implies
-				(<<"AND", "OR">>).has (al_conjunction)
 		do
 			where_expressions.force ([a_expr, a_conjunction])
-		ensure
-			added: where_expressions.has ([a_expr, a_conjunction])
 		end
 
 end

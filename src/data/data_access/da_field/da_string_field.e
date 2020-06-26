@@ -5,17 +5,17 @@ deferred class
 	DA_STRING_FIELD
 
 inherit
-	DA_FIELD [SQLITE_STRING_ARG, detachable READABLE_STRING_8]
+	DA_FIELD [detachable STRING, detachable STRING]
 
 feature -- Basic Operations
 
-	sqlite_to_eiffel (a_value: like sqlite_bind_arg.value): like value
+	sqlite_to_eiffel (a_value: STRING): STRING
 			-- Convert `sqlite_to_eiffel'.
 		do
 			Result := a_value
 		end
 
-	eiffel_to_sqlite (a_value: like value): like sqlite_bind_arg.value
+	eiffel_to_sqlite (a_value: STRING): STRING
 			-- Convert `eiffel_to_sqlite'.
 		do
 			Result := a_value
@@ -27,8 +27,7 @@ feature -- Output
 			--<Precursor>
 		do
 			if
-				attached sqlite_bind_arg as al_arg and then
-				attached al_arg.value as al_value
+				attached sqlite_bind_arg as al_value
 			then
 				Result := al_value
 			else
@@ -38,10 +37,14 @@ feature -- Output
 			Result.append_character ('%'')
 		end
 
-	formatted_value_out (a_value: attached like sqlite_bind_arg_value_anchor): STRING
+	formatted_value_out (a_value: detachable STRING): STRING
 			--<Precursor>
 		do
-			Result := a_value
+			if attached a_value as al_value then
+				Result := al_value
+			else
+				create Result.make_empty
+			end
 			Result.prepend_character ('%'')
 			Result.append_character ('%'')
 		end
