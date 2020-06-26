@@ -19,21 +19,8 @@ deferred class
 
 feature -- Access
 
-	parent_table: detachable STRING
-			-- Attached if has `parent_table'.
-			-- Redefine or Set.
-
-	fk_name: detachable STRING
-			-- Attached if has `parent_table'.
-			-- Redefine or Set.
-
-	has_parent,
-	is_child: BOOLEAN
-			-- Is current a child with parent?
-		do
-			Result := attached parent_table and then
-						attached fk_name
-		end
+	parent_pk_field: detachable DA_INTEGER_PK_FIELD
+			-- What is the parent, if any?
 
 	table_name: STRING
 		deferred
@@ -67,22 +54,39 @@ feature -- Access
 		deferred
 		end
 
-feature -- Settings
+feature -- Status Report
 
-	set_parent_table (a_name: attached like parent_table)
-			-- Set the `parent_table'.
+	has_parent,
+	is_child: BOOLEAN
+			-- Is current a child with parent?
 		do
-			parent_table := a_name
-		ensure
-			set: attached parent_table as al_name implies al_name.same_string (a_name)
+			Result := attached parent_pk_field
 		end
 
-	set_fk_name (a_name: attached like fk_name)
-			-- Set the `fk_name'.
+	parent_pk_table: detachable STRING
+			-- What is the table name of the parent, if any?
 		do
-			fk_name := a_name
+			if attached parent_pk_field as al_fld then
+				Result := al_fld.table_name
+			end
+		end
+
+	parent_pk_field_name: detachable STRING
+			-- What is the field name of the primary key in the parent, if any?
+		do
+			if attached parent_pk_field as al_fld then
+				Result := al_fld.name
+			end
+		end
+
+feature -- Settings
+
+	set_parent_pk_field (a_fld: attached like parent_pk_field)
+			-- Set the `parent_pk_field'.
+		do
+			parent_pk_field := a_fld
 		ensure
-			set: attached fk_name as al_name implies al_name.same_string (a_name)
+			set: attached parent_pk_field as al_fld implies al_fld ~ a_fld
 		end
 
 feature -- Basic Operations
