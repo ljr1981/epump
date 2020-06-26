@@ -5,7 +5,7 @@ deferred class
 	DA_BOOLEAN_FIELD
 
 inherit
-	DA_FIELD [BOOLEAN, BOOLEAN]
+	DA_FIELD [INTEGER, BOOLEAN]
 		redefine
 			value
 		end

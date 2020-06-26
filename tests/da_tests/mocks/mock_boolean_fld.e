@@ -23,16 +23,16 @@ feature -- Access
 
 feature -- Basic Operations
 
-	sqlite_to_eiffel (a_value: BOOLEAN): BOOLEAN
+	sqlite_to_eiffel (a_value: INTEGER): BOOLEAN
 			-- Convert `sqlite_to_eiffel'.
 		do
-			Result := a_value
+			Result := a_value.to_boolean
 		end
 
-	eiffel_to_sqlite (a_value: BOOLEAN): BOOLEAN
+	eiffel_to_sqlite (a_value: BOOLEAN): INTEGER
 			-- Convert `eiffel_to_sqlite'.
 		do
-			Result := a_value
+			Result := a_value.to_integer
 		end
 
 feature -- Output
@@ -51,7 +51,7 @@ feature -- Output
 			Result.append_character ('%'')
 		end
 
-	formatted_value_out (a_value: BOOLEAN): STRING
+	formatted_value_out (a_value: INTEGER): STRING
 			--<Precursor>
 		do
 			if attached a_value as al_value then
