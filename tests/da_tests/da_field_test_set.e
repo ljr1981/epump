@@ -34,4 +34,22 @@ feature -- Test routines
 			create l_pump_key
 			create l_pump_status
 		end
+
+	mock_field_tests
+
+		note
+			testing: "execution/serial"
+		local
+			l_bool: MOCK_BOOLEAN_FLD
+			l_char: MOCK_CHAR_FLD
+		do
+			create l_bool
+			l_bool.add_where_equal (False, (True).to_integer, Void)
+			assert_strings_equal ("where_equal", "mock_boolean = 1", l_bool.where_out)
+
+			create l_char
+			l_char.add_where_equal (False, "X", Void)
+			assert_strings_equal ("where_equal", "mock_character = 'X'", l_char.where_out)
+		end
+		
 end

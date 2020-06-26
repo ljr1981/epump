@@ -47,8 +47,6 @@ feature -- Output
 			else
 				create Result.make_empty
 			end
-			Result.prepend_character ('%'')
-			Result.append_character ('%'')
 		end
 
 	formatted_value_out (a_value: INTEGER): STRING
@@ -59,8 +57,6 @@ feature -- Output
 			else
 				create Result.make_empty
 			end
-			Result.prepend_character ('%'')
-			Result.append_character ('%'')
 		end
 
 end
