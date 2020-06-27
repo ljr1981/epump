@@ -127,7 +127,7 @@ feature -- Test routines
 	ep_db_delete_pump_with_data_tests
 			-- Ensure an inserted pump is successfully deleted.
 		note
-			testing: "execution/serial"
+			testing: "execution/isolated"
 		local
 			l_db: EP_DB
 			l_pump: EP_PUMP

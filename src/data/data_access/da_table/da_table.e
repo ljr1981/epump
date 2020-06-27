@@ -4,6 +4,11 @@ note
 deferred class
 	DA_TABLE
 
+inherit
+	ANY
+
+	DA_CONSTANTS
+
 feature -- Access
 
 	name: STRING
@@ -63,7 +68,7 @@ feature -- Output
 			--
 		do
 			create Result.make_empty
-			Result.append_string_general (" CREATE ")
+			Result.append_string_general (Create_sql_kw)
 			Result.append_character (';')
 		end
 
@@ -71,15 +76,15 @@ feature -- Output
 			--
 		do
 			create Result.make_empty
-			Result.append_string_general (" SELECT ")
+			Result.append_string_general (Select_sql_kw)
 			Result.append_string_general (fields_csv_list (False))
-			Result.append_string_general (" FROM ")
+			Result.append_string_general (From_sql_kw)
 			Result.append_string_general (name)
 			if attached where_clause as al_where_clause and then not al_where_clause.is_empty then
-				Result.append_string_general (" WHERE ")
+				Result.append_string_general (Where_sql_kw)
 				Result.append_string_general (al_where_clause)
 			end
-			Result.append_character (';')
+			Result.append_character (Semi_colon_char)
 		end
 
 	insert_sql_statement: STRING
@@ -89,24 +94,25 @@ feature -- Output
 			EIS: "src=https://www.tutorialspoint.com/sqlite/sqlite_insert_query.htm"
 		do
 			create Result.make_empty
-			Result.append_string_general (" INSERT INTO ")
+			Result.append_string_general (Insert_into_sql_kw)
 			Result.append_string_general (name)
-			Result.append_character (' ')
-			Result.append_character ('(')
+			Result.append_character (Space_char)
+			Result.append_character (Left_paren_char)
 			Result.append_string_general (fields_csv_list (True))
-			Result.append_character (')')
-			Result.append_string_general (" VALUES (")
+			Result.append_character (Right_paren_char)
+			Result.append_string_general (Values_sql_kw)
+			Result.append_character (Left_paren_char)
 			Result.append_string_general (field_values_csv_list (True))
-			Result.append_character (')')
-			Result.append_character (';')
+			Result.append_character (Right_paren_char)
+			Result.append_character (Semi_colon_char)
 		end
 
 	delete_sql_statement: STRING
 			--
 		do
 			create Result.make_empty
-			Result.append_string_general (" DELETE ")
-			Result.append_character (';')
+			Result.append_string_general (Deleete_sql_kw)
+			Result.append_character (Semi_colon_char)
 		end
 
 feature {NONE} -- Implementation
@@ -122,7 +128,7 @@ feature {NONE} -- Implementation
 			loop
 				l_clause := ic.item.where_out
 				if ic.cursor_index > 1 and not l_clause.is_empty then
-					Result.append_string_general (" AND ")
+					Result.append_string_general (And_conj_kw)
 				end
 				Result.append_string_general (l_clause)
 			end
@@ -140,8 +146,8 @@ feature {NONE} -- Implementation
 				else
 					Result.append_string_general (ic.item.name)
 					if ic.cursor_index < fields.count then
-						Result.append_character (',')
-						Result.append_character (' ')
+						Result.append_character (Comma_char)
+						Result.append_character (Space_char)
 					end
 				end
 			end
@@ -159,8 +165,8 @@ feature {NONE} -- Implementation
 				else
 					Result.append_string_general (ic.item.value_out)
 					if ic.cursor_index < fields.count then
-						Result.append_character (',')
-						Result.append_character (' ')
+						Result.append_character (Comma_char)
+						Result.append_character (Space_char)
 					end
 				end
 			end

@@ -31,6 +31,11 @@ note
 deferred class
 	DA_FIELD [S -> detachable ANY, D -> detachable ANY]
 
+inherit
+	ANY
+
+	DA_CONSTANTS
+
 feature -- Access
 
 	parent_pk_field: detachable DA_INTEGER_PK_FIELD
@@ -155,9 +160,9 @@ feature -- WHERE
 			loop
 				Result.append_string_general (ic.item.t_expr)
 				if attached ic.item.t_conjunction as al_conj then
-					Result.append_character (' ')
+					Result.append_character (Space_char)
 					Result.append_string_general (al_conj)
-					Result.append_character (' ')
+					Result.append_character (Space_char)
 				end
 			end
 		end
@@ -171,37 +176,37 @@ feature -- WHERE
 	add_where_equal (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_equal			-- <expr> = "[Field_name] = [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, "=")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, Equal_sign_kw)
 		end
 
 	add_where_lt (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_lt			-- <expr> = "[Field_name] < [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, "<")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, LT_sign_kw)
 		end
 
 	add_where_lte (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_lte			-- <expr> = "[Field_name] <= [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, "<=")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, LTE_sign_kw)
 		end
 
 	add_where_gt (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_gt			-- <expr> = "[Field_name] > [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, ">")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, GT_sign_kw)
 		end
 
 	add_where_gte (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_gte			-- <expr> = "[Field_name] >= [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, ">=")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, GTE_sign_kw)
 		end
 
 	add_where_is_not (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING)
 			--Where_is_not		-- <expr> = "[Field_name] IS NOT [Value]"
 		do
-			add_where_key_oper_value (a_not, a_value, a_conjunction, "IS NOT")
+			add_where_key_oper_value (a_not, a_value, a_conjunction, Is_not_sql_kw)
 		end
 
 	add_where_key_oper_value (a_not: BOOLEAN; a_value: S; a_conjunction: detachable STRING; a_oper: STRING)
@@ -211,10 +216,12 @@ feature -- WHERE
 		do
 			create l_expr.make_empty
 			if a_not then
-				l_expr.append_string_general (" NOT ")
+				l_expr.append_string_general (Not_sql_kw)
 			end
 			l_expr.append_string_general (name)
-			l_expr.append_string_general (" " + a_oper + " ")
+			l_expr.append_character (Space_char)
+			l_expr.append_string_general (a_oper)
+			l_expr.append_character (Space_char)
 			l_expr.append_string_general (formatted_value_out (a_value))
 			add_expression (l_expr, a_conjunction)
 		end
@@ -228,16 +235,20 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 		do
 			create l_expr.make_empty
 			if a_not then
-				l_expr.append_string_general (" NOT ")
+				l_expr.append_string_general (Not_sql_kw)
 			end
 			l_expr.append_string_general (name)
-			l_expr.append_string_general (" LIKE ")
+			l_expr.append_string_general (Like_sql_kw)
 			if a_starts_like then
-				l_expr.append_string_general (formatted_value_out (a_value) + "%%")
+				l_expr.append_string_general (formatted_value_out (a_value))
+				l_expr.append_character (Percent_char)
 			elseif a_ends_like then
-				l_expr.append_string_general ("%%" + formatted_value_out (a_value))
+				l_expr.append_character (Percent_char)
+				l_expr.append_string_general (formatted_value_out (a_value))
 			else -- has-like ...
-				l_expr.append_string_general ("%%" + formatted_value_out (a_value) + "%%")
+				l_expr.append_character (Percent_char)
+				l_expr.append_string_general (formatted_value_out (a_value))
+				l_expr.append_character (Percent_char)
 			end
 			add_expression (l_expr, a_conjunction)
 		end
@@ -249,16 +260,20 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 		do
 			create l_expr.make_empty
 			if a_not then
-				l_expr.append_string_general (" NOT ")
+				l_expr.append_string_general (Not_sql_kw)
 			end
 			l_expr.append_string_general (name)
-			l_expr.append_string_general (" LIKE ")
+			l_expr.append_string_general (Like_sql_kw)
 			if a_starts_like then
-				l_expr.append_string_general (formatted_value_out (a_value) + "*")
+				l_expr.append_string_general (formatted_value_out (a_value))
+				l_expr.append_character (Asterisk_char)
 			elseif a_ends_like then
-				l_expr.append_string_general ("*" + formatted_value_out (a_value))
+				l_expr.append_character (Asterisk_char)
+				l_expr.append_string_general (formatted_value_out (a_value))
 			else -- has-like ...
-				l_expr.append_string_general ("*" + formatted_value_out (a_value) + "*")
+				l_expr.append_character (Asterisk_char)
+				l_expr.append_string_general (formatted_value_out (a_value))
+				l_expr.append_character (Asterisk_char)
 			end
 			add_expression (l_expr, a_conjunction)
 		end
@@ -270,19 +285,20 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 		do
 			create l_expr.make_empty
 			if a_not then
-				l_expr.append_string_general (" NOT ")
+				l_expr.append_string_general (Not_sql_kw)
 			end
 			l_expr.append_string_general (name)
-			l_expr.append_string_general (" IN (")
+			l_expr.append_string_general (In_sql_kw)
+			l_expr.append_character (Left_paren_char)
 			across
 				a_value_list as ic
 			loop
 				l_expr.append_string_general (formatted_value_out (ic.item))
 				if ic.cursor_index < a_value_list.count then
-					l_expr.append_character (',')
+					l_expr.append_character (Comma_char)
 				end
 			end
-			l_expr.append_character (')')
+			l_expr.append_character (Right_paren_char)
 			add_expression (l_expr, a_conjunction)
 		end
 
@@ -293,12 +309,12 @@ feature -- WHERE LIKE / GLOB / IN / BETWEEN / EXISTS
 		do
 			create l_expr.make_empty
 			if a_not then
-				l_expr.append_string_general (" NOT ")
+				l_expr.append_string_general (Not_sql_kw)
 			end
 			l_expr.append_string_general (name)
-			l_expr.append_string_general (" BETWEEN ")
+			l_expr.append_string_general (Between_sql_kw)
 			l_expr.append_string_general (formatted_value_out (a_lb))
-			l_expr.append_string_general (" AND ")
+			l_expr.append_string_general (And_conj_kw)
 			l_expr.append_string_general (formatted_value_out (a_nb))
 			if attached a_conjunction then
 				add_expression (l_expr, a_conjunction)
