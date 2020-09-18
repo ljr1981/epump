@@ -1,5 +1,5 @@
-note
-	description: "Representation of a Pump"
+﻿note
+	description: "Representation of a Pump 🎉"
 	design: "[
 		See design notes in the note-clause at the bottom of the class.
 		]"
